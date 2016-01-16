@@ -15,7 +15,7 @@ public class Test1 {
 
     @Test
     public void pinsLoadTest() {
-        String fileName = "c";
+        String fileName = "D:\\prj\\violetnote-core\\data\\pins_example.csv";
         PinsDataLoader loader = new PinsDataLoader();
         try {
             loader.loadFromFile(fileName);
