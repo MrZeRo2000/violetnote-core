@@ -7,6 +7,10 @@ public class NoteCategory {
     private String categoryName;
     private NoteCategory parentCategory;
 
+    public NoteCategory(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     public String getCategoryName() {
         return categoryName;
     }
@@ -21,5 +25,14 @@ public class NoteCategory {
 
     public void setParentCategory(NoteCategory parentCategory) {
         this.parentCategory = parentCategory;
+    }
+
+    @Override
+    public String toString() {
+        if (parentCategory == null) {
+            return "{categoryName=" + categoryName + "}";
+        } else {
+            return "{categoryName=" + categoryName + ", parentCategory=" + parentCategory.categoryName + "}";
+        }
     }
 }

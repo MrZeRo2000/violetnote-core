@@ -8,7 +8,7 @@ import com.romanpulov.violetnotecore.Processor.Exception.DataLoaderIOException;
 import com.romanpulov.violetnotecore.Processor.Exception.DataLoaderParserException;
 
 import java.io.*;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created on 16.01.2016.
@@ -17,8 +17,8 @@ public class PinsDataLoader {
     private static final String FILE_DELIMITER = ";";
     private static final int FILE_FIELD_COUNT = 9;
 
-    private List<NoteCategory> noteCategoryList;
-    private List<PassNote> passNoteList;
+    private List<NoteCategory> noteCategoryList = new ArrayList<>();
+    private List<PassNote> passNoteList = new ArrayList<>();
 
     public List<NoteCategory> getNoteCategoryList() {
         return noteCategoryList;
@@ -28,9 +28,12 @@ public class PinsDataLoader {
         return passNoteList;
     }
 
+    private Map<String, NoteCategory> categoryNoteList = new HashMap<>();
+
     private void clearData() {
-        noteCategoryList = null;
-        passNoteList = null;
+        noteCategoryList.clear();
+        passNoteList.clear();
+        categoryNoteList.clear();
     }
 
     public void loadFromFile(String fileName) throws DataLoaderException {
@@ -52,7 +55,7 @@ public class PinsDataLoader {
                             throw new DataLoaderParserException(String.format(
                                     "Line %s: expected %d fields, actual: %d", line, FILE_FIELD_COUNT, splitLine.length));
                         }
-                        appendData(splitLine);
+                        parseData(splitLine);
                     }
                 }
             } finally {
@@ -67,7 +70,16 @@ public class PinsDataLoader {
         }
     }
 
-    private void appendData(String[] data) {
-
+    private void parseData(String[] data) {
+        String category = data[0];
+        NoteCategory noteCategory = categoryNoteList.get(category);
+        if (null == noteCategory) {
+            noteCategory= new NoteCategory(category);
+            categoryNoteList.put(category, noteCategory);
+            noteCategoryList.add(noteCategory);
+        }
+        PassNote passNote = new PassNote(noteCategory,
+                data[1].trim(), data[2].trim(), data[3].trim(), data[4].trim(), data[5].trim(), data[8].trim());
+        passNoteList.add(passNote);
     }
 }
