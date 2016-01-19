@@ -3,11 +3,11 @@ package com.romanpulov.violetnotecore.Model;
 /**
  * Created on 16.01.2016.
  */
-public class NoteCategory {
+public class PassCategory {
     private String categoryName;
-    private NoteCategory parentCategory;
+    private PassCategory parentCategory;
 
-    public NoteCategory(String categoryName) {
+    public PassCategory(String categoryName) {
         this.categoryName = categoryName;
     }
 
@@ -19,11 +19,11 @@ public class NoteCategory {
         this.categoryName = categoryName;
     }
 
-    public NoteCategory getParentCategory() {
+    public PassCategory getParentCategory() {
         return parentCategory;
     }
 
-    public void setParentCategory(NoteCategory parentCategory) {
+    public void setParentCategory(PassCategory parentCategory) {
         this.parentCategory = parentCategory;
     }
 

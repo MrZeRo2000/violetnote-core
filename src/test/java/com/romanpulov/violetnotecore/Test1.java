@@ -3,15 +3,11 @@ package com.romanpulov.violetnotecore;
 import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
 
-import com.romanpulov.violetnotecore.Model.NoteCategory;
+import com.romanpulov.violetnotecore.Model.PassCategory;
 import com.romanpulov.violetnotecore.Model.PassNote;
 import com.romanpulov.violetnotecore.Processor.Exception.DataLoaderException;
 import com.romanpulov.violetnotecore.Processor.PinsDataLoader;
 import org.junit.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
 
 public class Test1 {
 
@@ -27,8 +23,8 @@ public class Test1 {
         try {
             loader.loadFromFile(fileName);
 
-            System.out.println("NoteCategory:");
-            for (NoteCategory c : loader.getNoteCategoryList()) {
+            System.out.println("PassCategory:");
+            for (PassCategory c : loader.getPassCategoryList()) {
                 System.out.println(c.toString());
             }
 
@@ -41,5 +37,10 @@ public class Test1 {
             fail("DataLoaderException:" + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void xmlCreateTest() {
+        
     }
 }
