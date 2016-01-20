@@ -4,9 +4,11 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
 
 import com.romanpulov.violetnotecore.Model.PassCategory;
+import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassNote;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.Processor.PinsDataReader;
+import com.romanpulov.violetnotecore.Processor.XMLPassDataWriter;
 import org.junit.Test;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -23,16 +25,18 @@ import java.io.File;
 
 public class Test1 {
 
+    private static final String TEST_CSV_FILE_NAME = "data\\pins_example.csv";
+    private static final String TEST_OUT_XML_FILE_NAME = "data\\out_xml_test.xml";
+
     @Test
     public void method1() {
         assertEquals(1, 1);
     }
 
     public void pinsLoadTest() {
-        String fileName = "data\\pins_example.csv";
         PinsDataReader loader = new PinsDataReader();
         try {
-            loader.loadFromFile(fileName);
+            loader.loadFromFile(TEST_CSV_FILE_NAME);
 
             System.out.println("PassCategory:");
             for (PassCategory c : loader.getPassCategoryList()) {
@@ -50,10 +54,7 @@ public class Test1 {
         }
     }
 
-    @Test
     public void xmlCreateTest() throws Exception {
-        String fileName = "data\\out_xml_test.xml";
-
         DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = factory.newDocumentBuilder();
@@ -94,7 +95,7 @@ public class Test1 {
         categoryElement3.appendChild(nodeElement3);
 
         // write the content into xml file
-        File f = new File(fileName);
+        File f = new File(TEST_OUT_XML_FILE_NAME);
         if (f.exists())
             f.delete();
 
@@ -110,5 +111,37 @@ public class Test1 {
 
         transformer.transform(source, resultFile);
         transformer.transform(source, resultConsole);
+    }
+
+    @Test
+    public void xmlPassDataWriterTest() {
+        // load something
+        PinsDataReader loader = new PinsDataReader();
+        try {
+            loader.loadFromFile(TEST_CSV_FILE_NAME);
+        } catch (DataReadWriteException e) {
+            fail("PinsDataReader DataReadWriteException:" + e.getMessage());
+            e.printStackTrace();
+        }
+        // populate PassData
+        PassData pd = new PassData(
+            loader.getPassCategoryList(),
+            loader.getPassNoteList()
+        );
+        //write PassData
+
+        // write the content into xml file
+        File f = new File(TEST_OUT_XML_FILE_NAME);
+        if (f.exists())
+            f.delete();
+        StreamResult resultFile = new StreamResult(f);
+
+        XMLPassDataWriter writer = new XMLPassDataWriter(pd);
+        try {
+            writer.writeResult(resultFile);
+        } catch (DataReadWriteException e) {
+            fail("XMLPassDataWriter DataReadWriteException:" + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

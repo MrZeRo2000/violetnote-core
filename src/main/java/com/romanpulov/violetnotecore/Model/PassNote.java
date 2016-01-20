@@ -6,6 +6,15 @@ import java.util.Date;
  * Created on 16.01.2016.
  */
 public class PassNote {
+    public final static String XML_TAG_NAME = "node";
+
+    public final static String XML_TAG_ATTR_SYSTEM = "system";
+    public final static String XML_TAG_ATTR_USER = "user";
+    public final static String XML_TAG_ATTR_PASSWORD = "password";
+    public final static String XML_TAG_ATTR_COMMENTS = "comments";
+    public final static String XML_TAG_ATTR_CUSTOM = "custom";
+    public final static String XML_TAG_ATTR_INFO = "info";
+
     private PassCategory passCategory;
     private String system;
     private String user;
