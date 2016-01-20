@@ -3,9 +3,9 @@ package com.romanpulov.violetnotecore.Processor.Exception;
 /**
  * Created by 4540 on 16.01.2016.
  */
-public class DataLoaderIOException extends DataLoaderException {
+public class DataReadWriteParserException extends DataReadWriteException {
 
-    public DataLoaderIOException(String s) {
+    public DataReadWriteParserException(String s) {
         super(s);
     }
 }

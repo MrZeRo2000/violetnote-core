@@ -2,10 +2,9 @@ package com.romanpulov.violetnotecore.Processor;
 
 import com.romanpulov.violetnotecore.Model.PassCategory;
 import com.romanpulov.violetnotecore.Model.PassNote;
-import com.romanpulov.violetnotecore.Processor.Exception.DataLoaderException;
-import com.romanpulov.violetnotecore.Processor.Exception.DataLoaderFileNotFoundException;
-import com.romanpulov.violetnotecore.Processor.Exception.DataLoaderIOException;
-import com.romanpulov.violetnotecore.Processor.Exception.DataLoaderParserException;
+import com.romanpulov.violetnotecore.Processor.Exception.*;
+import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteParserException;
+import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteIOException;
 
 import java.io.*;
 import java.util.*;
@@ -13,7 +12,7 @@ import java.util.*;
 /**
  * Created on 16.01.2016.
  */
-public class PinsDataLoader {
+public class PinsDataReader {
     private static final String FILE_DELIMITER = ";";
     private static final int FILE_FIELD_COUNT = 9;
 
@@ -36,7 +35,7 @@ public class PinsDataLoader {
         categoryNoteList.clear();
     }
 
-    public void loadFromFile(String fileName) throws DataLoaderException {
+    public void loadFromFile(String fileName) throws DataReadWriteException {
         File file = new File(fileName);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -52,7 +51,7 @@ public class PinsDataLoader {
                     } else {
                         String[] splitLine = line.split(FILE_DELIMITER);
                         if (splitLine.length != FILE_FIELD_COUNT) {
-                            throw new DataLoaderParserException(String.format(
+                            throw new DataReadWriteParserException(String.format(
                                     "Line %s: expected %d fields, actual: %d", line, FILE_FIELD_COUNT, splitLine.length));
                         }
                         parseData(splitLine);
@@ -63,10 +62,10 @@ public class PinsDataLoader {
             }
         }
         catch (FileNotFoundException e) {
-            throw new DataLoaderFileNotFoundException(e.getMessage());
+            throw new DataReadWriteFileNotFoundException(e.getMessage());
         }
         catch (IOException e) {
-            throw new DataLoaderIOException(e.getMessage());
+            throw new DataReadWriteIOException(e.getMessage());
         }
     }
 

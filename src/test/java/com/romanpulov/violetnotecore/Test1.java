@@ -5,22 +5,18 @@ import static org.junit.Assert.fail;
 
 import com.romanpulov.violetnotecore.Model.PassCategory;
 import com.romanpulov.violetnotecore.Model.PassNote;
-import com.romanpulov.violetnotecore.Processor.Exception.DataLoaderException;
-import com.romanpulov.violetnotecore.Processor.PinsDataLoader;
+import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
+import com.romanpulov.violetnotecore.Processor.PinsDataReader;
 import org.junit.Test;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import java.io.File;
 
@@ -34,7 +30,7 @@ public class Test1 {
 
     public void pinsLoadTest() {
         String fileName = "data\\pins_example.csv";
-        PinsDataLoader loader = new PinsDataLoader();
+        PinsDataReader loader = new PinsDataReader();
         try {
             loader.loadFromFile(fileName);
 
@@ -48,8 +44,8 @@ public class Test1 {
                 System.out.println(n.toString());
             }
 
-        } catch (DataLoaderException e) {
-            fail("DataLoaderException:" + e.getMessage());
+        } catch (DataReadWriteException e) {
+            fail("DataReadWriteException:" + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -66,7 +62,7 @@ public class Test1 {
         Document doc = docBuilder.newDocument();
 
         //root
-        Element rootElement = doc.createElement("Root");
+        Element rootElement = doc.createElement("root");
         doc.appendChild(rootElement);
 
         //node types
