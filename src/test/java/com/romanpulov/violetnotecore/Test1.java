@@ -20,7 +20,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.*;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 
 public class Test1 {
@@ -114,7 +117,7 @@ public class Test1 {
     }
 
     @Test
-    public void xmlPassDataWriterTest() {
+    public void xmlPassDataWriterTest() throws  Exception{
         // load something
         PinsDataReader loader = new PinsDataReader();
         try {
@@ -134,7 +137,9 @@ public class Test1 {
         File f = new File(TEST_OUT_XML_FILE_NAME);
         if (f.exists())
             f.delete();
-        StreamResult resultFile = new StreamResult(f);
+
+        OutputStream stream = new BufferedOutputStream(new FileOutputStream(f));
+        StreamResult resultFile = new StreamResult(stream);
 
         XMLPassDataWriter writer = new XMLPassDataWriter(pd);
         try {

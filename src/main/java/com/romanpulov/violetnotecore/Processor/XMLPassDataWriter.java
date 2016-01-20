@@ -44,6 +44,11 @@ public class XMLPassDataWriter {
         }
     }
 
+    /**
+     * Writes PassData to Result
+     * @param result
+     * @throws DataReadWriteException
+     */
     public void writeResult(Result result) throws DataReadWriteException {
         //document
         Document doc = newXMLDocument();
@@ -51,35 +56,12 @@ public class XMLPassDataWriter {
         Element rootElement = doc.createElement("root");
         doc.appendChild(rootElement);
         //compose
-        composeDocument2(doc, rootElement);
+        composeDocument(doc, rootElement);
         //write
         writeDocument(doc, result);
     }
 
     private void composeDocument(Document doc, Element rootElement) {
-        Map<PassCategory, Element> categoryElementMap = new HashMap<>();
-        Element parentElement;
-        int count = 0;
-        while ((categoryElementMap.entrySet().size() < passData.getPassCategoryList().size()) && (count++ < passData.getPassCategoryList().size()))
-            for (PassCategory category : passData.getPassCategoryList()) {
-                if (categoryElementMap.get(category) == null) {
-                    PassCategory parentCategory = category.getParentCategory();
-                    if (parentCategory == null)
-                        parentElement = rootElement;
-                    else {
-                        parentElement = categoryElementMap.get(parentCategory);
-                        if (parentElement == null)
-                            continue;
-                    }
-                    Element categoryElement = doc.createElement(PassCategory.XML_TAG_NAME);
-                    categoryElement.setAttribute(PassCategory.XML_ATTR_CATEGORY_NAME, category.getCategoryName());
-                    parentElement.appendChild(categoryElement);
-                    categoryElementMap.put(category, categoryElement);
-                }
-            }
-    }
-
-    private void composeDocument2(Document doc, Element rootElement) {
         Map<PassCategory, Element> categoryElementMap = new HashMap<>();
         Element categoryElement;
         for (PassNote passNote : passData.getPassNoteList()) {
@@ -115,7 +97,6 @@ public class XMLPassDataWriter {
         }
         return categoryElement;
     }
-
 
     private void writeDocument(Document doc, Result result) throws DataReadWriteException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
