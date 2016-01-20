@@ -20,10 +20,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.*;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 
 public class Test1 {
@@ -116,7 +113,6 @@ public class Test1 {
         transformer.transform(source, resultConsole);
     }
 
-    @Test
     public void xmlPassDataWriterTest() throws  Exception{
         // load something
         PinsDataReader loader = new PinsDataReader();
@@ -143,10 +139,30 @@ public class Test1 {
 
         XMLPassDataWriter writer = new XMLPassDataWriter(pd);
         try {
-            writer.writeResult(resultFile);
+            writer.writeStream(new FileOutputStream(TEST_OUT_XML_FILE_NAME));
         } catch (DataReadWriteException e) {
             fail("XMLPassDataWriter DataReadWriteException:" + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    private void processNode(Node node) {
+        System.out.println("Node name = " + node.getNodeName());
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            processNode(nodeList.item(i));
+        }
+    }
+
+    @Test
+    public void xmlReadTest() throws Exception {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(new FileInputStream(TEST_OUT_XML_FILE_NAME));
+        Element element = doc.getDocumentElement();
+        if (element != null) {
+            processNode(element);
+        }
+    }
+
 }

@@ -19,46 +19,34 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created on 19.01.2016.
  */
-public class XMLPassDataWriter {
-    private PassData passData;
+public class XMLPassDataWriter extends XMLPassDataProcessor {
 
     public XMLPassDataWriter(PassData passData) {
-        this.passData = passData;
-    }
-
-    private Document newXMLDocument() throws DataReadWriteException {
-        //factory
-        DocumentBuilderFactory factory =
-                DocumentBuilderFactory.newInstance();
-        try {
-            DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            return docBuilder.newDocument();
-        } catch (ParserConfigurationException e) {
-            throw new DataReadWriteParserException(e.getMessage());
-        }
+        super(passData);
     }
 
     /**
      * Writes PassData to Result
-     * @param result
+     * @param stream
      * @throws DataReadWriteException
      */
-    public void writeResult(Result result) throws DataReadWriteException {
+    public void writeStream(OutputStream stream) throws DataReadWriteException {
         //document
         Document doc = newXMLDocument();
         //root
-        Element rootElement = doc.createElement("root");
+        Element rootElement = doc.createElement(XML_ROOT_TAG_NAME);
         doc.appendChild(rootElement);
         //compose
         composeDocument(doc, rootElement);
         //write
-        writeDocument(doc, result);
+        writeDocument(doc, new StreamResult(stream));
     }
 
     private void composeDocument(Document doc, Element rootElement) {
