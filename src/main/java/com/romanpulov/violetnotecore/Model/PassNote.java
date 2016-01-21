@@ -110,4 +110,33 @@ public class PassNote extends PassDataItem {
     public String getInfo() {
         return info;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PassNote passNote = (PassNote) o;
+
+        if (passCategory != null ? !passCategory.equals(passNote.passCategory) : passNote.passCategory != null)
+            return false;
+        if (system != null ? !system.equals(passNote.system) : passNote.system != null) return false;
+        if (user != null ? !user.equals(passNote.user) : passNote.user != null) return false;
+        if (password != null ? !password.equals(passNote.password) : passNote.password != null) return false;
+        if (comments != null ? !comments.equals(passNote.comments) : passNote.comments != null) return false;
+        if (custom != null ? !custom.equals(passNote.custom) : passNote.custom != null) return false;
+        return !(info != null ? !info.equals(passNote.info) : passNote.info != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = passCategory != null ? passCategory.hashCode() : 0;
+        result = 31 * result + (system != null ? system.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (comments != null ? comments.hashCode() : 0);
+        result = 31 * result + (custom != null ? custom.hashCode() : 0);
+        result = 31 * result + (info != null ? info.hashCode() : 0);
+        return result;
+    }
 }

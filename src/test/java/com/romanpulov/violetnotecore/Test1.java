@@ -22,6 +22,8 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Test1 {
@@ -176,11 +178,37 @@ public class Test1 {
         }
     }
 
-    @Test
     public void xmlPassDataReaderTest() throws  Exception{
         XMLPassDataReader reader = new XMLPassDataReader();
         PassData passData= reader.readStream(new FileInputStream(TEST_OUT_XML_FILE_NAME));
         System.out.println("Categories:" + passData.getPassCategoryList().size() + ", notes:" + passData.getPassNoteList().size());
+    }
+
+    @Test
+    public void PassCategoryEqualsTest() {
+        // category without parent
+        PassCategory c1 = new PassCategory("cat1");
+        PassCategory c2 = new PassCategory("cat1");
+        List<PassCategory> list1 = Arrays.asList(c1);
+        List<PassCategory> list2 = Arrays.asList(c2);
+        assertEquals(c1, c2);
+        assertTrue(list1.containsAll(list2));
+        //category with parent
+        PassCategory p1 = new PassCategory("parentcat1");
+        PassCategory p2 = new PassCategory("parentcat2");
+        c1.setParentCategory(p1);
+        assertFalse(c1.equals(c2));
+        c2.setParentCategory(p1);
+        assertTrue(c1.equals(c2));
+        c2.setParentCategory(p2);
+        assertFalse(c1.equals(c2));
+    }
+
+    @Test
+    public void PassNoteContainsTest() {
+        PassNote n1 = new PassNote(null, null, "user1", "password1", null, null, null);
+        PassNote n2 = new PassNote(null, null, "user1", "password1", null, null, null);
+        assertEquals(n1, n2);
     }
 
 }

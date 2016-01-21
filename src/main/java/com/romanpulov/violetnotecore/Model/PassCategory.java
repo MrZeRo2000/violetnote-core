@@ -44,4 +44,22 @@ public class PassCategory extends PassDataItem {
             return "{categoryName=" + categoryName + ", parentCategory=" + parentCategory.categoryName + "}";
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PassCategory category = (PassCategory) o;
+
+        if (!categoryName.equals(category.categoryName)) return false;
+        return !(parentCategory != null ? !parentCategory.equals(category.parentCategory) : category.parentCategory != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = categoryName.hashCode();
+        result = 31 * result + (parentCategory != null ? parentCategory.hashCode() : 0);
+        return result;
+    }
 }
