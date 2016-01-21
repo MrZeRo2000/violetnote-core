@@ -122,7 +122,6 @@ public class Test1 {
         PinsDataReader pinsReader = new PinsDataReader();
         PassData pd = null;
         try {
-
             pd = pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
         } catch (DataReadWriteException e) {
             fail("PinsDataReader DataReadWriteException:" + e.getMessage());
@@ -158,13 +157,11 @@ public class Test1 {
         if (userNode != null)
             System.out.println("Named attribute user:" + userNode.getTextContent());
 
-
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             processNode(nodeList.item(i));
         }
     }
-
 
     public void xmlReadTest() throws Exception {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -210,8 +207,33 @@ public class Test1 {
     }
 
     @Test
-    public void XMLReadWriteEquivalenceTest() {
+    public void XMLReadWriteEquivalenceTest() throws Exception {
         // get something to PassData
-    }
+        PassData pd = null;
+        try {
+            pd =  new PinsDataReader().readStream(new FileInputStream(TEST_CSV_FILE_NAME));
+        } catch (DataReadWriteException e) {
+            fail("PinsDataReader DataReadWriteException:" + e.getMessage());
+            e.printStackTrace();
+        }
 
+        //write to test output file
+        XMLPassDataWriter writer = new XMLPassDataWriter(pd);
+        try {
+            writer.writeStream(new FileOutputStream(TEST_OUT_XML_FILE_NAME));
+        } catch (DataReadWriteException e) {
+            fail("XMLPassDataWriter DataReadWriteException:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        //read from test output file to another PassData
+        XMLPassDataReader reader = new XMLPassDataReader();
+        PassData pd1= reader.readStream(new FileInputStream(TEST_OUT_XML_FILE_NAME));
+
+        //compare
+        assertTrue(pd.getPassCategoryList().containsAll(pd1.getPassCategoryList()));
+        assertTrue(pd1.getPassCategoryList().containsAll(pd.getPassCategoryList()));
+        assertTrue(pd.getPassNoteList().containsAll(pd1.getPassNoteList()));
+        assertTrue(pd1.getPassNoteList().containsAll(pd.getPassNoteList()));
+    }
 }
