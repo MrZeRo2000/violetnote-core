@@ -1,6 +1,7 @@
 package com.romanpulov.violetnotecore.Processor;
 
 import com.romanpulov.violetnotecore.Model.PassCategory;
+import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassNote;
 import com.romanpulov.violetnotecore.Processor.Exception.*;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteParserException;
@@ -16,31 +17,18 @@ public class PinsDataReader {
     private static final String FILE_DELIMITER = ";";
     private static final int FILE_FIELD_COUNT = 9;
 
-    private List<PassCategory> passCategoryList = new ArrayList<>();
-    private List<PassNote> passNoteList = new ArrayList<>();
+    private List<PassCategory> passCategoryList;
+    private List<PassNote> passNoteList;
+    private Map<String, PassCategory> categoryNoteList;
 
-    public List<PassCategory> getPassCategoryList() {
-        return passCategoryList;
-    }
+    public PassData readStream(InputStream stream) throws DataReadWriteException {
+        passCategoryList = new ArrayList<>();
+        passNoteList = new ArrayList<>();
+        categoryNoteList = new HashMap<>();
 
-    public List<PassNote> getPassNoteList() {
-        return passNoteList;
-    }
-
-    private Map<String, PassCategory> categoryNoteList = new HashMap<>();
-
-    private void clearData() {
-        passCategoryList.clear();
-        passNoteList.clear();
-        categoryNoteList.clear();
-    }
-
-    public void readStream(InputStream stream) throws DataReadWriteException {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             try {
-                clearData();
-
                 String line = null;
                 boolean isFirstLine = true;
                 while ((line = reader.readLine()) != null) {
@@ -58,6 +46,7 @@ public class PinsDataReader {
             } finally {
                 reader.close();
             }
+            return new PassData(passCategoryList, passNoteList);
         }
         catch (FileNotFoundException e) {
             throw new DataReadWriteFileNotFoundException(e.getMessage());

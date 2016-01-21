@@ -39,15 +39,15 @@ public class Test1 {
     public void pinsLoadTest() throws Exception {
         PinsDataReader pinsReader = new PinsDataReader();
         try {
-            pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
+            PassData pd = pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
 
             System.out.println("PassCategory:");
-            for (PassCategory c : pinsReader.getPassCategoryList()) {
+            for (PassCategory c : pd.getPassCategoryList()) {
                 System.out.println(c.toString());
             }
 
             System.out.println("PassNote:");
-            for (PassNote n : pinsReader.getPassNoteList()) {
+            for (PassNote n : pd.getPassNoteList()) {
                 System.out.println(n.toString());
             }
 
@@ -120,18 +120,14 @@ public class Test1 {
     public void xmlPassDataWriterTest() throws  Exception{
         // load something
         PinsDataReader pinsReader = new PinsDataReader();
+        PassData pd = null;
         try {
 
-            pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
+            pd = pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
         } catch (DataReadWriteException e) {
             fail("PinsDataReader DataReadWriteException:" + e.getMessage());
             e.printStackTrace();
         }
-        // populate PassData
-        PassData pd = new PassData(
-            pinsReader.getPassCategoryList(),
-            pinsReader.getPassNoteList()
-        );
         //write PassData
 
         // write the content into xml file
