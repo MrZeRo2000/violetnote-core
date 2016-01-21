@@ -35,10 +35,9 @@ public class PinsDataReader {
         categoryNoteList.clear();
     }
 
-    public void loadFromFile(String fileName) throws DataReadWriteException {
-        File file = new File(fileName);
+    public void readStream(InputStream stream) throws DataReadWriteException {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             try {
                 clearData();
 
@@ -47,7 +46,6 @@ public class PinsDataReader {
                 while ((line = reader.readLine()) != null) {
                     if (isFirstLine) {
                         isFirstLine = false;
-                        continue;
                     } else {
                         String[] splitLine = line.split(FILE_DELIMITER);
                         if (splitLine.length != FILE_FIELD_COUNT) {

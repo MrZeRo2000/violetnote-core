@@ -36,18 +36,18 @@ public class Test1 {
         assertEquals(1, 1);
     }
 
-    public void pinsLoadTest() {
-        PinsDataReader loader = new PinsDataReader();
+    public void pinsLoadTest() throws Exception {
+        PinsDataReader pinsReader = new PinsDataReader();
         try {
-            loader.loadFromFile(TEST_CSV_FILE_NAME);
+            pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
 
             System.out.println("PassCategory:");
-            for (PassCategory c : loader.getPassCategoryList()) {
+            for (PassCategory c : pinsReader.getPassCategoryList()) {
                 System.out.println(c.toString());
             }
 
             System.out.println("PassNote:");
-            for (PassNote n : loader.getPassNoteList()) {
+            for (PassNote n : pinsReader.getPassNoteList()) {
                 System.out.println(n.toString());
             }
 
@@ -116,19 +116,21 @@ public class Test1 {
         transformer.transform(source, resultConsole);
     }
 
+    @Test
     public void xmlPassDataWriterTest() throws  Exception{
         // load something
-        PinsDataReader loader = new PinsDataReader();
+        PinsDataReader pinsReader = new PinsDataReader();
         try {
-            loader.loadFromFile(TEST_CSV_FILE_NAME);
+
+            pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
         } catch (DataReadWriteException e) {
             fail("PinsDataReader DataReadWriteException:" + e.getMessage());
             e.printStackTrace();
         }
         // populate PassData
         PassData pd = new PassData(
-            loader.getPassCategoryList(),
-            loader.getPassNoteList()
+            pinsReader.getPassCategoryList(),
+            pinsReader.getPassNoteList()
         );
         //write PassData
 
@@ -209,6 +211,11 @@ public class Test1 {
         PassNote n1 = new PassNote(null, null, "user1", "password1", null, null, null);
         PassNote n2 = new PassNote(null, null, "user1", "password1", null, null, null);
         assertEquals(n1, n2);
+    }
+
+    @Test
+    public void XMLReadWriteEquivalenceTest() {
+        // get something to PassData
     }
 
 }
