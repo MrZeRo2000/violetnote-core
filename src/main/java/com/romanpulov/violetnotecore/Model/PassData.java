@@ -10,6 +10,10 @@ public class PassData {
     private List<PassCategory> passCategoryList = new ArrayList<>();
     private List<PassNote> passNoteList = new ArrayList<>();
 
+    public PassData() {
+
+    }
+
     public PassData(List<PassCategory> passCategoryList, List<PassNote> passNoteList) {
         setPassData(passCategoryList, passNoteList);
     }
@@ -33,5 +37,12 @@ public class PassData {
     public void setPassData(List<PassCategory> passCategoryList, List<PassNote> passNoteList) {
         this.passCategoryList = passCategoryList;
         this.passNoteList = passNoteList;
+    }
+
+    public void addPassDataItem(PassDataItem item) {
+        if (item instanceof PassCategory) {
+            passCategoryList.add((PassCategory)item);
+        } else if (item instanceof PassNote)
+            passNoteList.add((PassNote)item);
     }
 }

@@ -12,13 +12,13 @@ import javax.xml.parsers.ParserConfigurationException;
  * Created on 20.01.2016.
  */
 public abstract class XMLDataProcessor {
-    protected Document newXMLDocument() throws DataReadWriteException {
+
+    protected DocumentBuilder newDocumentBuilder() throws DataReadWriteException {
         //factory
         DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();
         try {
-            DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            return docBuilder.newDocument();
+            return factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             throw new DataReadWriteParserException(e.getMessage());
         }

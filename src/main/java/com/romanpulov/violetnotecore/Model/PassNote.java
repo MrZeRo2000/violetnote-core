@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created on 16.01.2016.
  */
-public class PassNote {
+public class PassNote extends PassDataItem {
     public final static String XML_TAG_NAME = "node";
 
     public final static String XML_TAG_ATTR_SYSTEM = "system";
@@ -31,6 +31,16 @@ public class PassNote {
         this.modifiedDate = new Date();
     }
 
+    /**
+     * Constructor for PassNote
+     * @param passCategory
+     * @param system
+     * @param user
+     * @param password
+     * @param comments
+     * @param custom
+     * @param info
+     */
     public PassNote(PassCategory passCategory, String system, String user, String password, String comments, String custom, String info) {
         this();
         this.passCategory = passCategory;

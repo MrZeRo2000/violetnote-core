@@ -8,6 +8,7 @@ import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassNote;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.Processor.PinsDataReader;
+import com.romanpulov.violetnotecore.Processor.XMLPassDataReader;
 import com.romanpulov.violetnotecore.Processor.XMLPassDataWriter;
 import org.junit.Test;
 
@@ -148,13 +149,23 @@ public class Test1 {
 
     private void processNode(Node node) {
         System.out.println("Node name = " + node.getNodeName());
+        NamedNodeMap nodeMap = node.getAttributes();
+        for (int i=0; i<nodeMap.getLength(); i++) {
+            System.out.println("Attr Node name = " + nodeMap.item(i).getNodeName());
+            System.out.println("Attr Text Content = " + nodeMap.item(i).getTextContent());
+        }
+        Node userNode = nodeMap.getNamedItem("user");
+        if (userNode != null)
+            System.out.println("Named attribute user:" + userNode.getTextContent());
+
+
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             processNode(nodeList.item(i));
         }
     }
 
-    @Test
+
     public void xmlReadTest() throws Exception {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -163,6 +174,13 @@ public class Test1 {
         if (element != null) {
             processNode(element);
         }
+    }
+
+    @Test
+    public void xmlPassDataReaderTest() throws  Exception{
+        XMLPassDataReader reader = new XMLPassDataReader();
+        PassData passData= reader.readStream(new FileInputStream(TEST_OUT_XML_FILE_NAME));
+        System.out.println("Categories:" + passData.getPassCategoryList().size() + ", notes:" + passData.getPassNoteList().size());
     }
 
 }

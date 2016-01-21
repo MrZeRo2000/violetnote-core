@@ -29,7 +29,7 @@ import java.util.Map;
 public class XMLPassDataWriter extends XMLPassDataProcessor {
 
     public XMLPassDataWriter(PassData passData) {
-        super(passData);
+        this.passData = passData;
     }
 
     /**
@@ -39,7 +39,7 @@ public class XMLPassDataWriter extends XMLPassDataProcessor {
      */
     public void writeStream(OutputStream stream) throws DataReadWriteException {
         //document
-        Document doc = newXMLDocument();
+        Document doc = newDocumentBuilder().newDocument();
         //root
         Element rootElement = doc.createElement(XML_ROOT_TAG_NAME);
         doc.appendChild(rootElement);

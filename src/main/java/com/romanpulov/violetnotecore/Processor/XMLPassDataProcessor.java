@@ -10,8 +10,7 @@ public class XMLPassDataProcessor extends XMLDataProcessor {
 
     protected PassData passData;
 
-    public XMLPassDataProcessor(PassData passData) {
-        this.passData = passData;
-    }
+    public XMLPassDataProcessor() {
 
+    }
 }
