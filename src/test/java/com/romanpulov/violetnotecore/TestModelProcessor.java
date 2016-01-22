@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class Test1 {
+public class TestModelProcessor {
 
     private static final String TEST_CSV_FILE_NAME = "data\\pins_example.csv";
     private static final String TEST_OUT_XML_FILE_NAME = "data\\out_xml_test.xml";

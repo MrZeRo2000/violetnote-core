@@ -4,13 +4,17 @@ import com.romanpulov.violetnotecore.Utils.Cryptography;
 import com.romanpulov.violetnotecore.Utils.HexConverter;
 import org.junit.Test;
 
+import javax.crypto.SecretKeyFactory;
+
+import java.security.NoSuchAlgorithmException;
+
 import static org.junit.Assert.*;
 
 
 /**
  * Created by on 22.01.2016.
  */
-public class TestCrypto {
+public class TestCryptography {
 
     @Test
     public void method1() {
@@ -30,6 +34,15 @@ public class TestCrypto {
     public void saltGenConvertTest() {
         for (int i=0; i < 10000; i++)
             saltGenConvert();
+    }
+
+    @Test
+    public void keyGen() throws Exception {
+        try {
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        } catch (NoSuchAlgorithmException e) {
+            throw e;
+        }
     }
 
 }
