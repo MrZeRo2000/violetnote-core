@@ -1,12 +1,19 @@
 package com.romanpulov.violetnotecore;
 
-import com.romanpulov.violetnotecore.Utils.Cryptography;
+import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Utils.HexConverter;
 import org.junit.Test;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
+import java.security.AlgorithmParameters;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.KeySpec;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +29,7 @@ public class TestCryptography {
     }
 
     public void saltGenConvert() {
-        byte[] salt = Cryptography.generateSalt(8);
+        byte[] salt = AESCryptService.generateSalt(8);
         String saltString = HexConverter.bytesToHex(salt);
         byte[] salt1 = HexConverter.hexToBytes(HexConverter.bytesToHex(salt));
         assertArrayEquals(salt, salt1);
@@ -38,8 +45,32 @@ public class TestCryptography {
 
     @Test
     public void keyGen() throws Exception {
+        final int ITERATIONS = 65536;
+        final int KEYLEN_SIZE = 128;
         try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte[] salt = AESCryptService.generateSalt(8);
+            String password = "Password1";
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, KEYLEN_SIZE);
+            SecretKey key = factory.generateSecret(spec);
+            SecretKey secret = new SecretKeySpec(key.getEncoded(), "AES");
+
+            /* Encrypt the message. */
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secret);
+            AlgorithmParameters params = cipher.getParameters();
+            byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+
+            byte[] ciphertext = cipher.doFinal("Hello, World!".getBytes("UTF-8"));
+            System.out.println(HexConverter.bytesToHex(ciphertext));
+
+
+            /* Decrypt the message, given derived key and initialization vector. */
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+            String plaintext = new String(cipher.doFinal(ciphertext), "UTF-8");
+            System.out.println(plaintext);
+
         } catch (NoSuchAlgorithmException e) {
             throw e;
         }
