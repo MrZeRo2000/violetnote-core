@@ -3,11 +3,15 @@ package com.romanpulov.violetnotecore.AESCrypt;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.AlgorithmParameters;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
 import javax.crypto.Cipher;
 
@@ -18,6 +22,7 @@ public class AESCryptService {
     private static final int SALT_LEN = 8;
     private static final int KEY_LEN = 128;
     private static final int ITERATIONS = 65536;
+    private static final int AES_BLOCK_SIZE = 16;
 
     public static byte[] generateSalt(int length) {
         byte[] salt = new byte [length];
@@ -57,6 +62,26 @@ public class AESCryptService {
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
+
+        //generate salt
+        byte[] salt = generateSalt(SALT_LEN);
+        SecretKey key = generateKey(password, salt);
+
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+        } catch (InvalidKeyException e) {
+            throw new AESCryptException(e.getMessage());
+        }
+
+        AlgorithmParameters params = cipher.getParameters();
+
+        byte[] iv;
+        try {
+            iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+        } catch (InvalidParameterSpecException e) {
+            throw new AESCryptException(e.getMessage());
+        }
+
 
         return cipher;
     }

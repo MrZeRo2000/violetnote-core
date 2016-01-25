@@ -49,7 +49,7 @@ public class TestCryptography {
         final int KEYLEN_SIZE = 128;
         try {
             byte[] salt = AESCryptService.generateSalt(8);
-            String password = "Password1";
+            String password = "Password1fg sdfg sdfg sdfg sdfg dsgf sdfg sdsfg ";
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, KEYLEN_SIZE);
             SecretKey key = factory.generateSecret(spec);
@@ -60,6 +60,7 @@ public class TestCryptography {
             cipher.init(Cipher.ENCRYPT_MODE, secret);
             AlgorithmParameters params = cipher.getParameters();
             byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+            System.out.println("iv size:" + iv.length);
 
             byte[] ciphertext = cipher.doFinal("Hello, World!".getBytes("UTF-8"));
             System.out.println(HexConverter.bytesToHex(ciphertext));
