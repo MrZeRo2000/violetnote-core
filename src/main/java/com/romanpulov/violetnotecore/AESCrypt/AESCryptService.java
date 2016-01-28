@@ -6,10 +6,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.AlgorithmParameters;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
@@ -23,6 +20,27 @@ public class AESCryptService {
     private static final int KEY_LEN = 128;
     private static final int ITERATIONS = 65536;
     private static final int AES_BLOCK_SIZE = 16;
+
+    private byte[] salt;
+    SecretKey secretKey;
+    private byte[] iv;
+    private Cipher cipher;
+
+    public byte[] getSalt() {
+        return salt;
+    }
+
+    public SecretKey getSecretKey() {
+        return secretKey;
+    }
+
+    public byte[] getIv() {
+        return iv;
+    }
+
+    public Cipher getCipher() {
+        return cipher;
+    }
 
     public static byte[] generateSalt(int length) {
         byte[] salt = new byte [length];
@@ -53,9 +71,7 @@ public class AESCryptService {
         return new SecretKeySpec(temporaryKey.getEncoded(), "AES");
     }
 
-    public Cipher generateCipher(String password) throws AESCryptException {
-        Cipher cipher;
-
+    public void generateEncryptCipher(String password) throws AESCryptException {
         //create cipher
         try {
             cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -64,26 +80,33 @@ public class AESCryptService {
         }
 
         //generate salt
-        byte[] salt = generateSalt(SALT_LEN);
-        SecretKey key = generateKey(password, salt);
+        salt = generateSalt(SALT_LEN);
+        secretKey = generateKey(password, salt);
 
         try {
-            cipher.init(Cipher.ENCRYPT_MODE, key);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         } catch (InvalidKeyException e) {
             throw new AESCryptException(e.getMessage());
         }
 
         AlgorithmParameters params = cipher.getParameters();
-
-        byte[] iv;
         try {
             iv = params.getParameterSpec(IvParameterSpec.class).getIV();
         } catch (InvalidParameterSpecException e) {
             throw new AESCryptException(e.getMessage());
         }
+    }
 
-
-        return cipher;
+    public void generateDecryptCipher(String password, byte[] salt, byte[] iv) throws AESCryptException {
+        this.salt = salt;
+        this.secretKey = generateKey(password, salt);
+        this.iv = iv;
+        try {
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+        } catch(NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException e) {
+            throw new AESCryptException(e.getMessage());
+        }
     }
 
 }
