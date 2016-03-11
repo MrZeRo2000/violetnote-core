@@ -2,7 +2,6 @@ package com.romanpulov.violetnotecore;
 
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Utils.HexConverter;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import org.junit.Test;
 
 import javax.crypto.CipherInputStream;
@@ -19,8 +18,8 @@ import static org.junit.Assert.assertEquals;
  * Created by 4540 on 28.01.2016.
  */
 public class TestAESCryptService {
-    private static final String TEST_STREAM_FILE_NAME = "data\\stream.bin";
-    private static final String TEST_IV_FILE_NAME = "data\\stream.bin";
+    private static final String TEST_STREAM_FILE_NAME = "data\\stream_test.bin";
+    private static final String TEST_IV_FILE_NAME = "data\\stream_test.bin";
     private static final String TEST_PASSWORD = "password1";
     private static final String TEST_MESSAGE = "This is a test message";
 
