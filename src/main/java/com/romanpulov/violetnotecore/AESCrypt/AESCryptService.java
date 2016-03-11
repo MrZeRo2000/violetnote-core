@@ -1,23 +1,24 @@
 package com.romanpulov.violetnotecore.AESCrypt;
 
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
-import javax.crypto.Cipher;
 
 /**
  * Created on 22.01.2016.
  */
 public class AESCryptService {
-    private static final int SALT_LEN = 8;
+    public static final int SALT_LEN = 8;
     private static final int KEY_LEN = 128;
+    public static final int IV_LEN = KEY_LEN / 8;
     private static final int ITERATIONS = 65536;
     private static final int AES_BLOCK_SIZE = 16;
 
@@ -107,6 +108,36 @@ public class AESCryptService {
         } catch(NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
+    }
+
+    public static OutputStream generateCryptOutputStream (OutputStream output, String password) throws AESCryptException, IOException {
+        AESCryptService s = new AESCryptService();
+        s.generateEncryptCipher(password);
+        output.write(s.getSalt());
+        output.write(s.getIv());
+
+        return new CipherOutputStream(output, s.getCipher());
+    }
+
+    public static InputStream generateCryptInputStream(InputStream input, String password) throws AESCryptException, IOException {
+        int readBytes;
+
+        byte[] inSalt = new byte[AESCryptService.SALT_LEN];
+        readBytes = input.read(inSalt, 0, inSalt.length);
+        if (readBytes != inSalt.length) {
+            throw new AESCryptException("Error reading salt : " + readBytes);
+        }
+
+        byte[] inIV = new byte[AESCryptService.IV_LEN];
+        readBytes = input.read(inIV, 0, inIV.length);
+        if (readBytes != inIV.length) {
+            throw new AESCryptException("Error reading IV : " + readBytes);
+        }
+
+        AESCryptService inCipher = new AESCryptService();
+        inCipher.generateDecryptCipher(password, inSalt, inIV);
+
+        return new CipherInputStream(input, inCipher.getCipher());
     }
 
 }

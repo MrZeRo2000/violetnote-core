@@ -3,6 +3,7 @@ package com.romanpulov.violetnotecore;
 import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
 
+import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Model.PassCategory;
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassNote;
@@ -12,6 +13,8 @@ import com.romanpulov.violetnotecore.Processor.XMLPassDataReader;
 import com.romanpulov.violetnotecore.Processor.XMLPassDataWriter;
 import org.junit.Test;
 
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -30,6 +33,8 @@ public class TestModelProcessor {
 
     private static final String TEST_CSV_FILE_NAME = "data\\pins_example.csv";
     private static final String TEST_OUT_XML_FILE_NAME = "data\\out_xml_test.xml";
+    private static final String TEST_OUT_VNF_FILE_NAME = "data\\out_vnf_test.xml";
+    private static final String TEST_PASSWORD = "Pass1";
 
     @Test
     public void method1() {
@@ -206,9 +211,7 @@ public class TestModelProcessor {
         assertEquals(n1, n2);
     }
 
-    @Test
-    public void XMLReadWriteEquivalenceTest() throws Exception {
-        // get something to PassData
+    private PassData getPINSPassData()  throws Exception {
         PassData pd = null;
         try {
             pd =  new PinsDataReader().readStream(new FileInputStream(TEST_CSV_FILE_NAME));
@@ -216,6 +219,13 @@ public class TestModelProcessor {
             fail("PinsDataReader DataReadWriteException:" + e.getMessage());
             e.printStackTrace();
         }
+        return pd;
+    }
+
+    @Test
+    public void XMLReadWriteEquivalenceTest() throws Exception {
+        // get something to PassData
+        PassData pd = getPINSPassData();
 
         //write to test output file
         XMLPassDataWriter writer = new XMLPassDataWriter(pd);
@@ -236,4 +246,39 @@ public class TestModelProcessor {
         assertTrue(pd.getPassNoteList().containsAll(pd1.getPassNoteList()));
         assertTrue(pd1.getPassNoteList().containsAll(pd.getPassNoteList()));
     }
+
+    @Test
+    public void CryptXMLReadWriteEquivalenceTest() throws Exception {
+        // get something to PassData
+        PassData pd = getPINSPassData();
+
+        OutputStream output = AESCryptService.generateCryptOutputStream(new FileOutputStream(TEST_OUT_VNF_FILE_NAME), TEST_PASSWORD);
+
+        //write to crypt output file
+        XMLPassDataWriter writer = new XMLPassDataWriter(pd);
+        try {
+            writer.writeStream(output);
+        } catch (DataReadWriteException e) {
+            fail("XMLPassDataWriter DataReadWriteException:" + e.getMessage());
+            e.printStackTrace();
+        }
+        output.flush();
+        output.close();
+
+        //read from crypt output file to another PassData
+        InputStream input = AESCryptService.generateCryptInputStream(new FileInputStream(TEST_OUT_VNF_FILE_NAME), TEST_PASSWORD);
+
+        XMLPassDataReader reader = new XMLPassDataReader();
+        PassData pd1= reader.readStream(input);
+
+        input.close();
+
+        //compare
+        assertTrue(pd.getPassCategoryList().containsAll(pd1.getPassCategoryList()));
+        assertTrue(pd1.getPassCategoryList().containsAll(pd.getPassCategoryList()));
+        assertTrue(pd.getPassNoteList().containsAll(pd1.getPassNoteList()));
+        assertTrue(pd1.getPassNoteList().containsAll(pd.getPassNoteList()));
+
+    }
+
 }
