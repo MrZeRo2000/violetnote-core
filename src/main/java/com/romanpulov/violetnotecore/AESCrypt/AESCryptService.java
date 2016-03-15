@@ -54,7 +54,8 @@ public class AESCryptService {
         //factory
         SecretKeyFactory factory;
         try {
-            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+//            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+              factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         } catch (NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
