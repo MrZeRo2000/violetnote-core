@@ -14,8 +14,8 @@ import java.util.*;
  * Created on 16.01.2016.
  */
 public class PinsDataReader {
-    private static final String FILE_DELIMITER = ";";
-    private static final int FILE_FIELD_COUNT = 9;
+    protected static final String FILE_DELIMITER = "; ";
+    protected static final int FILE_FIELD_COUNT = 9;
 
     private List<PassCategory> passCategoryList;
     private List<PassNote> passNoteList;
@@ -36,10 +36,12 @@ public class PinsDataReader {
                         isFirstLine = false;
                     } else {
                         String[] splitLine = line.split(FILE_DELIMITER);
-                        if (splitLine.length != FILE_FIELD_COUNT) {
+                        /*
+                        if ((splitLine.length != FILE_FIELD_COUNT)) {
                             throw new DataReadWriteParserException(String.format(
                                     "Line %s: expected %d fields, actual: %d", line, FILE_FIELD_COUNT, splitLine.length));
                         }
+                        */
                         parseData(splitLine);
                     }
                 }
@@ -65,7 +67,13 @@ public class PinsDataReader {
             passCategoryList.add(passCategory);
         }
         PassNote passNote = new PassNote(passCategory,
-                data[1].trim(), data[2].trim(), data[3].trim(), data[4].trim(), data[5].trim(), data[8].trim());
+                data.length > 1 ? data[1].trim() : "",
+                data.length > 2 ? data[2].trim() : "",
+                data.length > 3 ? data[3].trim() : "",
+                data.length > 4 ? data[4].trim() : "",
+                data.length > 5 ? data[5].trim() : "",
+                data.length > 8 ? data[8].trim() : ""
+        );
         passNoteList.add(passNote);
     }
 }

@@ -9,6 +9,7 @@ import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassNote;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.Processor.PinsDataReader;
+import com.romanpulov.violetnotecore.Processor.PinsDataWriter;
 import com.romanpulov.violetnotecore.Processor.XMLPassDataReader;
 import com.romanpulov.violetnotecore.Processor.XMLPassDataWriter;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import java.util.List;
 public class TestModelProcessor {
 
     private static final String TEST_CSV_FILE_NAME = "data\\pins_example.csv";
+    private static final String TEST_CSV_OUT_FILE_NAME = "data\\pins_example_out.csv";
     private static final String TEST_OUT_XML_FILE_NAME = "data\\out_xml_test.xml";
     private static final String TEST_OUT_VNF_FILE_NAME = "data\\out_vnf_test.xml";
     private static final String TEST_PASSWORD = "Pass1";
@@ -60,6 +62,20 @@ public class TestModelProcessor {
             fail("DataReadWriteException:" + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void pinsSaveTest() throws Exception {
+        PinsDataReader pinsReader = new PinsDataReader();
+        PassData pd = pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
+        PinsDataWriter pinsWriter = new PinsDataWriter();
+        pinsWriter.writeStream(new FileOutputStream(TEST_CSV_OUT_FILE_NAME), pd);
+
+        PassData pd1 = (new PinsDataReader()).readStream(new FileInputStream(TEST_CSV_OUT_FILE_NAME));
+
+        //compare
+        assertTrue(pd.getPassNoteList().containsAll(pd1.getPassNoteList()));
+        assertTrue(pd1.getPassNoteList().containsAll(pd.getPassNoteList()));
     }
 
     public void xmlCreateTest() throws Exception {
