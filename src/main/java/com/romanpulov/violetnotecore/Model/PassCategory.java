@@ -4,8 +4,8 @@ package com.romanpulov.violetnotecore.Model;
  * Created on 16.01.2016.
  */
 public class PassCategory extends PassDataItem {
-    public final static String XML_TAG_NAME = "category";
-    public final static String XML_ATTR_CATEGORY_NAME = "name";
+    public final static String ATTR_NODE_CATEGORY = "category";
+    public final static String ATTR_CATEGORY_NAME = "name";
 
     private String categoryName;
     private PassCategory parentCategory;

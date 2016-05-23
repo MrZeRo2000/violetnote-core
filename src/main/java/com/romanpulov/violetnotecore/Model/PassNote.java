@@ -1,19 +1,21 @@
 package com.romanpulov.violetnotecore.Model;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created on 16.01.2016.
  */
 public class PassNote extends PassDataItem {
-    public final static String XML_TAG_NAME = "node";
+    public final static String ATTR_NODE_NOTE = "node";
 
-    public final static String XML_TAG_ATTR_SYSTEM = "system";
-    public final static String XML_TAG_ATTR_USER = "user";
-    public final static String XML_TAG_ATTR_PASSWORD = "password";
-    public final static String XML_TAG_ATTR_COMMENTS = "comments";
-    public final static String XML_TAG_ATTR_CUSTOM = "custom";
-    public final static String XML_TAG_ATTR_INFO = "info";
+    public final static String ATTR_SYSTEM = "system";
+    public final static String ATTR_USER = "user";
+    public final static String ATTR_PASSWORD = "password";
+    public final static String ATTR_COMMENTS = "comments";
+    public final static String ATTR_CUSTOM = "custom";
+    public final static String ATTR_INFO = "info";
 
     private PassCategory passCategory;
     private String system;
@@ -137,6 +139,17 @@ public class PassNote extends PassDataItem {
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (custom != null ? custom.hashCode() : 0);
         result = 31 * result + (info != null ? info.hashCode() : 0);
+        return result;
+    }
+
+    public Map<String, String> getNoteAttr() {
+        Map<String, String> result = new LinkedHashMap<>();
+        result.put(ATTR_SYSTEM, system);
+        result.put(ATTR_USER, user);
+        result.put(ATTR_PASSWORD, password);
+        result.put(ATTR_COMMENTS, comments);
+        result.put(ATTR_CUSTOM, custom);
+        result.put(ATTR_INFO, info);
         return result;
     }
 }

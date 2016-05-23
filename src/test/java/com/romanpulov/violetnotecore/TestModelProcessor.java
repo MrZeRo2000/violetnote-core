@@ -28,6 +28,8 @@ import org.w3c.dom.*;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class TestModelProcessor {
@@ -295,6 +297,35 @@ public class TestModelProcessor {
         assertTrue(pd.getPassNoteList().containsAll(pd1.getPassNoteList()));
         assertTrue(pd1.getPassNoteList().containsAll(pd.getPassNoteList()));
 
+    }
+
+    @Test
+    public void TestPassNoteGetNoteAttr() {
+        PassNote n1 = new PassNote(null, "System1", "user1", "password1", null, null, null);
+        Map<String, String> a1 = n1.getNoteAttr();
+        int i = 1;
+        for (String s: a1.keySet()) {
+            switch (i++) {
+                case 1:
+                    assertEquals(s, PassNote.ATTR_SYSTEM);
+                    break;
+                case 2:
+                    assertEquals(s, PassNote.ATTR_USER);
+                    break;
+                case 3:
+                    assertEquals(s, PassNote.ATTR_PASSWORD);
+                    break;
+                case 4:
+                    assertEquals(s, PassNote.ATTR_COMMENTS);
+                    break;
+                case 5:
+                    assertEquals(s, PassNote.ATTR_CUSTOM);
+                    break;
+                case 6:
+                    assertEquals(s, PassNote.ATTR_INFO);
+                    break;
+            }
+        }
     }
 
 }

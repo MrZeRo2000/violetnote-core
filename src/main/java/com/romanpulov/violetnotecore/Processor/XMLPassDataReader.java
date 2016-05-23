@@ -9,8 +9,6 @@ import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteParserExce
 import org.w3c.dom.*;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created on 20.01.2016.
@@ -52,9 +50,9 @@ public class XMLPassDataReader extends XMLPassDataProcessor{
     private static class NodeCreator {
         private static PassDataItem create(Node node, PassDataItem parentItem) throws DataReadWriteException {
             switch (node.getNodeName()) {
-                case PassCategory.XML_TAG_NAME:
+                case PassCategory.ATTR_NODE_CATEGORY:
                     return createPassCategory(node, (PassCategory) parentItem);
-                case PassNote.XML_TAG_NAME:
+                case PassNote.ATTR_NODE_NOTE:
                     return createPassNote(node, (PassCategory) parentItem);
                 default:
                     throw new DataReadWriteParserException("Unexpected node name: " + node.getNodeName());
@@ -72,7 +70,7 @@ public class XMLPassDataReader extends XMLPassDataProcessor{
         private static PassCategory createPassCategory(Node node, PassCategory parentCategory) throws DataReadWriteParserException {
             NamedNodeMap nodeMap = node.getAttributes();
             if (nodeMap != null) {
-                String categoryName = getNodeAttributeContent(nodeMap, PassCategory.XML_ATTR_CATEGORY_NAME);
+                String categoryName = getNodeAttributeContent(nodeMap, PassCategory.ATTR_CATEGORY_NAME);
                 if (categoryName != null)
                     return new PassCategory(categoryName, parentCategory);
                 else
@@ -85,12 +83,12 @@ public class XMLPassDataReader extends XMLPassDataProcessor{
             NamedNodeMap nodeMap = node.getAttributes();
             if (nodeMap != null) {
                 return new PassNote(parentCategory,
-                        getNodeAttributeContent(nodeMap, PassNote.XML_TAG_ATTR_SYSTEM),
-                        getNodeAttributeContent(nodeMap, PassNote.XML_TAG_ATTR_USER),
-                        getNodeAttributeContent(nodeMap, PassNote.XML_TAG_ATTR_PASSWORD),
-                        getNodeAttributeContent(nodeMap, PassNote.XML_TAG_ATTR_COMMENTS),
-                        getNodeAttributeContent(nodeMap, PassNote.XML_TAG_ATTR_CUSTOM),
-                        getNodeAttributeContent(nodeMap, PassNote.XML_TAG_ATTR_INFO)
+                        getNodeAttributeContent(nodeMap, PassNote.ATTR_SYSTEM),
+                        getNodeAttributeContent(nodeMap, PassNote.ATTR_USER),
+                        getNodeAttributeContent(nodeMap, PassNote.ATTR_PASSWORD),
+                        getNodeAttributeContent(nodeMap, PassNote.ATTR_COMMENTS),
+                        getNodeAttributeContent(nodeMap, PassNote.ATTR_CUSTOM),
+                        getNodeAttributeContent(nodeMap, PassNote.ATTR_INFO)
                         );
             } else
                 throw new DataReadWriteParserException("Note node attributes not found");

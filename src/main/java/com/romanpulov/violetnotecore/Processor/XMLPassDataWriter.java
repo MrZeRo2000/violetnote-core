@@ -5,14 +5,9 @@ import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassNote;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteIOException;
-import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.swing.text.html.parser.Parser;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -58,21 +53,21 @@ public class XMLPassDataWriter extends XMLPassDataProcessor {
             if (categoryElement == null) {
                 categoryElement = composeCategoryElement(doc, rootElement, category, categoryElementMap);
             }
-            Element noteElement = doc.createElement(PassNote.XML_TAG_NAME);
-            noteElement.setAttribute(PassNote.XML_TAG_ATTR_SYSTEM, passNote.getSystem());
-            noteElement.setAttribute(PassNote.XML_TAG_ATTR_USER, passNote.getUser());
-            noteElement.setAttribute(PassNote.XML_TAG_ATTR_PASSWORD, passNote.getPassword());
-            noteElement.setAttribute(PassNote.XML_TAG_ATTR_COMMENTS, passNote.getComments());
-            noteElement.setAttribute(PassNote.XML_TAG_ATTR_CUSTOM, passNote.getCustom());
-            noteElement.setAttribute(PassNote.XML_TAG_ATTR_INFO, passNote.getInfo());
+            Element noteElement = doc.createElement(PassNote.ATTR_NODE_NOTE);
+            noteElement.setAttribute(PassNote.ATTR_SYSTEM, passNote.getSystem());
+            noteElement.setAttribute(PassNote.ATTR_USER, passNote.getUser());
+            noteElement.setAttribute(PassNote.ATTR_PASSWORD, passNote.getPassword());
+            noteElement.setAttribute(PassNote.ATTR_COMMENTS, passNote.getComments());
+            noteElement.setAttribute(PassNote.ATTR_CUSTOM, passNote.getCustom());
+            noteElement.setAttribute(PassNote.ATTR_INFO, passNote.getInfo());
             categoryElement.appendChild(noteElement);
         }
     }
 
     private Element composeCategoryElement(Document doc, Element rootElement, PassCategory category, Map<PassCategory, Element> categoryElementMap) {
         //create new element
-        Element categoryElement = doc.createElement(PassCategory.XML_TAG_NAME);
-        categoryElement.setAttribute(PassCategory.XML_ATTR_CATEGORY_NAME, category.getCategoryName());
+        Element categoryElement = doc.createElement(PassCategory.ATTR_NODE_CATEGORY);
+        categoryElement.setAttribute(PassCategory.ATTR_CATEGORY_NAME, category.getCategoryName());
         categoryElementMap.put(category, categoryElement);
         if (category.getParentCategory() == null)
             rootElement.appendChild(categoryElement);
