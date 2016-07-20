@@ -34,8 +34,8 @@ import java.util.Set;
 
 public class TestModelProcessor {
 
-    private static final String TEST_CSV_FILE_NAME = "data\\pins_example.csv";
-    private static final String TEST_CSV_OUT_FILE_NAME = "data\\pins_example_out.csv";
+    private static final String TEST_CSV_FILE_NAME = "data\\pins_example_nolf.csv";
+    private static final String TEST_CSV_OUT_FILE_NAME = "data\\pins_example_nolf_out.csv";
     private static final String TEST_OUT_XML_FILE_NAME = "data\\out_xml_test.xml";
     private static final String TEST_OUT_VNF_FILE_NAME = "data\\out_vnf_test.xml";
     private static final String TEST_PASSWORD = "Pass1";

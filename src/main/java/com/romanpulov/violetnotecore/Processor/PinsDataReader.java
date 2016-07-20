@@ -59,7 +59,7 @@ public class PinsDataReader {
     }
 
     private static String parseString(String line) {
-        return line.trim();
+        return line.trim().replaceAll("\\|\\|", "\n");
     }
 
     private void parseData(String[] data) {
