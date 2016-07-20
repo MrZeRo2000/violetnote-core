@@ -58,6 +58,10 @@ public class PinsDataReader {
         }
     }
 
+    private static String parseString(String line) {
+        return line.trim();
+    }
+
     private void parseData(String[] data) {
         String category = data[0];
         PassCategory passCategory = categoryNoteList.get(category);
@@ -67,12 +71,12 @@ public class PinsDataReader {
             passCategoryList.add(passCategory);
         }
         PassNote passNote = new PassNote(passCategory,
-                data.length > 1 ? data[1].trim() : "",
-                data.length > 2 ? data[2].trim() : "",
-                data.length > 3 ? data[3].trim() : "",
-                data.length > 4 ? data[4].trim() : "",
-                data.length > 5 ? data[5].trim() : "",
-                data.length > 8 ? data[8].trim() : ""
+                data.length > 1 ? parseString(data[1]) : "",
+                data.length > 2 ? parseString(data[2]) : "",
+                data.length > 3 ? parseString(data[3]) : "",
+                data.length > 4 ? parseString(data[4]) : "",
+                data.length > 5 ? parseString(data[5]) : "",
+                data.length > 8 ? parseString(data[8]) : ""
         );
         passNoteList.add(passNote);
     }
