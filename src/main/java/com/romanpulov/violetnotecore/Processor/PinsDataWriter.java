@@ -17,8 +17,11 @@ public class PinsDataWriter {
     private static final String FILE_HEADER = "Category; System; User; Password; Comments; Custom; StartDate; Expires; Info";
     private static final String FILE_DELIMITER = "; ";
 
-    public void writeStream(OutputStream stream, PassData passData) throws DataReadWriteException {
+    private static String encodeString(String line) {
+        return line.trim().replaceAll("\n", "\\|\\|");
+    }
 
+    public void writeStream(OutputStream stream, PassData passData) throws DataReadWriteException {
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
 
@@ -29,22 +32,22 @@ public class PinsDataWriter {
                 for (PassNote passNote : passData.getPassNoteList()) {
                     StringBuilder sb = new StringBuilder();
 
-                    sb.append(passNote.getPassCategory().getCategoryName());
+                    sb.append(encodeString(passNote.getPassCategory().getCategoryName()));
                     sb.append(FILE_DELIMITER);
 
-                    sb.append(passNote.getSystem());
+                    sb.append(encodeString(passNote.getSystem()));
                     sb.append(FILE_DELIMITER);
 
-                    sb.append(passNote.getUser());
+                    sb.append(encodeString(passNote.getUser()));
                     sb.append(FILE_DELIMITER);
 
-                    sb.append(passNote.getPassword());
+                    sb.append(encodeString(passNote.getPassword()));
                     sb.append(FILE_DELIMITER);
 
-                    sb.append(passNote.getComments());
+                    sb.append(encodeString(passNote.getComments()));
                     sb.append(FILE_DELIMITER);
 
-                    sb.append(passNote.getCustom());
+                    sb.append(encodeString(passNote.getCustom()));
                     sb.append(FILE_DELIMITER);
 
                     //start date
@@ -52,7 +55,7 @@ public class PinsDataWriter {
                     //expires
                     sb.append(FILE_DELIMITER);
 
-                    sb.append(passNote.getInfo());
+                    sb.append(encodeString(passNote.getInfo()));
 
                     writer.write(sb.toString());
                     writer.newLine();

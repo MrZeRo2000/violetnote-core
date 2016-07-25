@@ -34,6 +34,8 @@ import java.util.Set;
 
 public class TestModelProcessor {
 
+    private static final String TEST_CSV_LF_FILE_NAME = "data\\pins_example.csv";
+    private static final String TEST_CSV_LF_OUR_FILE_NAME = "data\\pins_example_out.csv";
     private static final String TEST_CSV_FILE_NAME = "data\\pins_example_nolf.csv";
     private static final String TEST_CSV_OUT_FILE_NAME = "data\\pins_example_nolf_out.csv";
     private static final String TEST_OUT_XML_FILE_NAME = "data\\out_xml_test.xml";
@@ -69,11 +71,11 @@ public class TestModelProcessor {
     @Test
     public void pinsSaveTest() throws Exception {
         PinsDataReader pinsReader = new PinsDataReader();
-        PassData pd = pinsReader.readStream(new FileInputStream(TEST_CSV_FILE_NAME));
+        PassData pd = pinsReader.readStream(new FileInputStream(TEST_CSV_LF_FILE_NAME));
         PinsDataWriter pinsWriter = new PinsDataWriter();
-        pinsWriter.writeStream(new FileOutputStream(TEST_CSV_OUT_FILE_NAME), pd);
+        pinsWriter.writeStream(new FileOutputStream(TEST_CSV_LF_OUR_FILE_NAME), pd);
 
-        PassData pd1 = (new PinsDataReader()).readStream(new FileInputStream(TEST_CSV_OUT_FILE_NAME));
+        PassData pd1 = (new PinsDataReader()).readStream(new FileInputStream(TEST_CSV_LF_OUR_FILE_NAME));
 
         //compare
         assertTrue(pd.getPassNoteList().containsAll(pd1.getPassNoteList()));
