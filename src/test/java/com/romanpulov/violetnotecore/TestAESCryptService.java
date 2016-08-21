@@ -6,10 +6,7 @@ import org.junit.Test;
 
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -21,6 +18,7 @@ public class TestAESCryptService {
     private static final String TEST_STREAM_FILE_NAME = "data\\stream_test.bin";
     private static final String TEST_IV_FILE_NAME = "data\\stream_test.bin";
     private static final String TEST_PASSWORD = "password1";
+    private static final String WRONG_PASSWORD = "p1ssword";
     private static final String TEST_MESSAGE = "This is a test message";
 
     public void testWriteIV() throws Exception {
@@ -34,6 +32,8 @@ public class TestAESCryptService {
 
     @Test
     public void testStringMessage() throws Exception {
+        System.out.println("testStringMessage start");
+
         AESCryptService encrypt = new AESCryptService();
         encrypt.generateEncryptCipher(TEST_PASSWORD);
         byte[] ciphertext = encrypt.getCipher().doFinal("Hello, World!".getBytes("UTF-8"));
@@ -43,10 +43,14 @@ public class TestAESCryptService {
         decrypt.generateDecryptCipher(TEST_PASSWORD, encrypt.getSalt(), encrypt.getIv());
         String plaintext = new String(decrypt.getCipher().doFinal(ciphertext), "UTF-8");
         System.out.println("plainText=" + plaintext);
+
+        System.out.println("testStringMessage finish");
     }
 
     @Test
     public void testWriteReadMessage() throws Exception {
+        System.out.println("testWriteReadMessage start");
+
         FileOutputStream stream = new FileOutputStream(TEST_STREAM_FILE_NAME);
 
         AESCryptService s = new AESCryptService();
@@ -84,6 +88,43 @@ public class TestAESCryptService {
         inStream.close();
         os.close();
         assertEquals(os.toString(), TEST_MESSAGE);
+
+        System.out.println("testWriteReadMessage finish");
     }
 
+    @Test
+    public void testCryptStringMessage() throws Exception {
+        System.out.println("testCryptStringMessage start");
+
+        String testString = TEST_MESSAGE;
+        String aesEncryptedString = AESCryptService.encryptString(testString, TEST_PASSWORD);
+
+        System.out.println("Source string:" + testString);
+        System.out.println("Encrypted string AES: " + aesEncryptedString);
+
+        String aesDecryptedString = AESCryptService.decryptString(aesEncryptedString, TEST_PASSWORD);
+        System.out.println("Decrypted string AES:" + aesDecryptedString);
+
+        assertEquals(testString, aesDecryptedString);
+
+        System.out.println("testCryptStringMessage finish");
+    }
+
+    @Test
+    public void testCryptStringWrongPasswordMessage() throws Exception {
+        System.out.println("testCryptStringWrongPasswordMessage start");
+
+        String testString = TEST_MESSAGE;
+        String aesEncryptedString = AESCryptService.encryptString(testString, TEST_PASSWORD);
+
+        try {
+            String aesDecryptedString = AESCryptService.decryptString(aesEncryptedString, WRONG_PASSWORD);
+        } catch (Exception e) {
+            System.out.println("Expected exception:" + e.getMessage());
+            System.out.println("testCryptStringWrongPasswordMessage finish");
+            return;
+        }
+
+        throw new Exception("Should not get here: wrong password did not throw exception");
+    }
 }

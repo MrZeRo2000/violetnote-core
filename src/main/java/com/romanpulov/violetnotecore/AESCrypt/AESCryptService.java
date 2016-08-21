@@ -1,12 +1,12 @@
 package com.romanpulov.violetnotecore.AESCrypt;
 
+import com.romanpulov.violetnotecore.Utils.HexConverter;
+
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
@@ -111,6 +111,15 @@ public class AESCryptService {
         }
     }
 
+    /**
+     * Generates output stream for encryption and prepares it for writing
+     * writes salt and IV
+     * @param output
+     * @param password
+     * @return
+     * @throws AESCryptException
+     * @throws IOException
+     */
     public static OutputStream generateCryptOutputStream (OutputStream output, String password) throws AESCryptException, IOException {
         AESCryptService s = new AESCryptService();
         s.generateEncryptCipher(password);
@@ -120,6 +129,15 @@ public class AESCryptService {
         return new CipherOutputStream(output, s.getCipher());
     }
 
+    /**
+     * Generates input stream for decryption and prepares it for reading
+     * reads salt and IV
+     * @param input
+     * @param password
+     * @return
+     * @throws AESCryptException
+     * @throws IOException
+     */
     public static InputStream generateCryptInputStream(InputStream input, String password) throws AESCryptException, IOException {
         int readBytes;
 
@@ -139,6 +157,56 @@ public class AESCryptService {
         inCipher.generateDecryptCipher(password, inSalt, inIV);
 
         return new CipherInputStream(input, inCipher.getCipher());
+    }
+
+    /**
+     * Encrypts input string with password
+     * Utility procedure
+     * @param inputString
+     * @param password
+     * @return
+     * @throws AESCryptException
+     * @throws IOException
+     */
+    public static String encryptString(String inputString, String password) throws AESCryptException, IOException {
+        //prepare output stream
+        ByteArrayOutputStream dataOutputStream = new ByteArrayOutputStream();
+        OutputStream cryptOutputStream = AESCryptService.generateCryptOutputStream(dataOutputStream, password);
+
+        //convert and write
+        byte[] inputStringAsBytes = inputString.getBytes("UTF-8");
+        cryptOutputStream.write(inputStringAsBytes);
+        cryptOutputStream.flush();
+        cryptOutputStream.close();
+
+        //prepare and return encrypted string
+        byte[] encryptedStringAsBytes = dataOutputStream.toByteArray();
+        return HexConverter.bytesToHex(encryptedStringAsBytes);
+    }
+
+    /**\
+     * Decrypts input string with password
+     * Utility procedure
+     * @param inputString
+     * @param password
+     * @return
+     * @throws AESCryptException
+     * @throws IOException
+     */
+    public static String decryptString(String inputString, String password) throws AESCryptException, IOException {
+        //prepare input stream
+        ByteArrayInputStream encryptedStringAsBytes = new ByteArrayInputStream(HexConverter.hexToBytes(inputString));
+        InputStream cryptInputStream = AESCryptService.generateCryptInputStream(encryptedStringAsBytes, password);
+
+        //read from encrypted stream
+        ByteArrayOutputStream decryptedStringAsBytes = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = cryptInputStream.read(buffer)) != -1) {
+            decryptedStringAsBytes.write(buffer, 0, length);
+        }
+
+        return decryptedStringAsBytes.toString("UTF-8");
     }
 
 }
