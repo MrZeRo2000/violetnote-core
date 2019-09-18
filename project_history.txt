@@ -1,0 +1,5 @@
+
+# set JAVA HOME and build path
+
+set JAVA_HOME=C:/WinApp/jdk-12.0.2/
+set path=%PATH%;"D:/prj/apache-maven-3.3.9/bin"
