@@ -12,7 +12,7 @@ dependencies {
 }
 
 group = 'com.romanpulov'
-version = '1.1-SNAPSHOT'
+version = '1.2'
 description = 'violetnotecore'
 sourceCompatibility = '1.7'
 
