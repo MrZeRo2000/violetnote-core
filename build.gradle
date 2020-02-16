@@ -7,13 +7,6 @@ plugins {
     id 'maven-publish'
 }
 
-repositories {
-    mavenLocal()
-    maven {
-        url = 'http://repo.maven.apache.org/maven2'
-    }
-}
-
 dependencies {
     testCompile 'junit:junit:4.12'
 }

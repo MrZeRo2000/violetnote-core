@@ -3,3 +3,6 @@
 
 set JAVA_HOME=C:/WinApp/jdk-12.0.2/
 set path=%PATH%;"D:/prj/apache-maven-3.3.9/bin"
+
+# build and publish to local repository
+gradlew clean publishToMavenLocal
