@@ -17,11 +17,16 @@ import java.security.spec.KeySpec;
  * Created on 22.01.2016.
  */
 public class AESCryptService {
-    private static final String SECRET_KEY_INSTANCE = "PBKDF2WithHmacSHA1";
-    private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5Padding";
-    private static final int KEY_LEN = 128;
-    private static final int SALT_LEN = 8;
-    private static final int ITERATIONS = 65536;
+
+    private static AESCryptConfiguration CRYPT_CONFIGURATION;
+
+    static {
+        CRYPT_CONFIGURATION = AESCryptConfigurationFactory.createDefault();
+    }
+
+    public static void configure(AESCryptConfiguration cryptConfiguration) {
+        AESCryptService.CRYPT_CONFIGURATION = cryptConfiguration;
+    }
 
     private byte[] salt;
 
@@ -55,12 +60,12 @@ public class AESCryptService {
         SecretKeyFactory factory;
         try {
 //            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-              factory = SecretKeyFactory.getInstance(SECRET_KEY_INSTANCE);
+              factory = SecretKeyFactory.getInstance(CRYPT_CONFIGURATION.secretKeyInstance);
         } catch (NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
         //key spec
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, KEY_LEN);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, CRYPT_CONFIGURATION.iterations, CRYPT_CONFIGURATION.keyLen);
 
         //secret key
         SecretKey temporaryKey;
@@ -76,13 +81,13 @@ public class AESCryptService {
     public void generateEncryptCipher(String password) throws AESCryptException {
         //create cipher
         try {
-            cipher = Cipher.getInstance(CIPHER_INSTANCE);
+            cipher = Cipher.getInstance(CRYPT_CONFIGURATION.cipherInstance);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
 
         //generate salt
-        salt = generateSalt(SALT_LEN);
+        salt = generateSalt(CRYPT_CONFIGURATION.saltLen);
         secretKey = generateKey(password, salt);
 
         try {
@@ -104,7 +109,7 @@ public class AESCryptService {
         this.secretKey = generateKey(password, salt);
         this.iv = iv;
         try {
-            cipher = Cipher.getInstance(CIPHER_INSTANCE);
+            cipher = Cipher.getInstance(CRYPT_CONFIGURATION.cipherInstance);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
         } catch(NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
@@ -141,13 +146,13 @@ public class AESCryptService {
     public static InputStream generateCryptInputStream(InputStream input, String password) throws AESCryptException, IOException {
         int readBytes;
 
-        byte[] inSalt = new byte[AESCryptService.SALT_LEN];
+        byte[] inSalt = new byte[CRYPT_CONFIGURATION.saltLen];
         readBytes = input.read(inSalt, 0, inSalt.length);
         if (readBytes != inSalt.length) {
             throw new AESCryptException("Error reading salt : " + readBytes);
         }
 
-        byte[] inIV = new byte[AESCryptService.KEY_LEN / 8];
+        byte[] inIV = new byte[CRYPT_CONFIGURATION.keyLen / 8];
         readBytes = input.read(inIV, 0, inIV.length);
         if (readBytes != inIV.length) {
             throw new AESCryptException("Error reading IV : " + readBytes);
