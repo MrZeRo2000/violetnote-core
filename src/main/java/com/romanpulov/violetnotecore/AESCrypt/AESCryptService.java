@@ -17,12 +17,11 @@ import java.security.spec.KeySpec;
  * Created on 22.01.2016.
  */
 public class AESCryptService {
-    public static final int SALT_LEN = 8;
+    private static final String SECRET_KEY_INSTANCE = "PBKDF2WithHmacSHA1";
+    private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5Padding";
     private static final int KEY_LEN = 128;
-    public static final int IV_LEN = KEY_LEN / 8;
+    private static final int SALT_LEN = 8;
     private static final int ITERATIONS = 65536;
-    public static final String CIPHER_INSTANCE = "AES/CBC/PKCS5Padding";
-    public static final String SECRET_KEY_INSTANCE = "PBKDF2WithHmacSHA1";
 
     private byte[] salt;
 
@@ -148,7 +147,7 @@ public class AESCryptService {
             throw new AESCryptException("Error reading salt : " + readBytes);
         }
 
-        byte[] inIV = new byte[AESCryptService.IV_LEN];
+        byte[] inIV = new byte[AESCryptService.KEY_LEN / 8];
         readBytes = input.read(inIV, 0, inIV.length);
         if (readBytes != inIV.length) {
             throw new AESCryptException("Error reading IV : " + readBytes);
