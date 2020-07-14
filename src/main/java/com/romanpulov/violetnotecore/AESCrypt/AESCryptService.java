@@ -7,6 +7,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
@@ -20,24 +21,24 @@ public class AESCryptService {
     private static final int KEY_LEN = 128;
     public static final int IV_LEN = KEY_LEN / 8;
     private static final int ITERATIONS = 65536;
-    private static final int AES_BLOCK_SIZE = 16;
+    public static final String CIPHER_INSTANCE = "AES/CBC/PKCS5Padding";
+    public static final String SECRET_KEY_INSTANCE = "PBKDF2WithHmacSHA1";
 
     private byte[] salt;
-    SecretKey secretKey;
-    private byte[] iv;
-    private Cipher cipher;
 
     public byte[] getSalt() {
         return salt;
     }
 
-    public SecretKey getSecretKey() {
-        return secretKey;
-    }
+    private SecretKey secretKey;
+
+    private byte[] iv;
 
     public byte[] getIv() {
         return iv;
     }
+
+    private Cipher cipher;
 
     public Cipher getCipher() {
         return cipher;
@@ -55,7 +56,7 @@ public class AESCryptService {
         SecretKeyFactory factory;
         try {
 //            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-              factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+              factory = SecretKeyFactory.getInstance(SECRET_KEY_INSTANCE);
         } catch (NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
@@ -76,7 +77,7 @@ public class AESCryptService {
     public void generateEncryptCipher(String password) throws AESCryptException {
         //create cipher
         try {
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher = Cipher.getInstance(CIPHER_INSTANCE);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
@@ -104,7 +105,7 @@ public class AESCryptService {
         this.secretKey = generateKey(password, salt);
         this.iv = iv;
         try {
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher = Cipher.getInstance(CIPHER_INSTANCE);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
         } catch(NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
@@ -174,7 +175,7 @@ public class AESCryptService {
         OutputStream cryptOutputStream = AESCryptService.generateCryptOutputStream(dataOutputStream, password);
 
         //convert and write
-        byte[] inputStringAsBytes = inputString.getBytes("UTF-8");
+        byte[] inputStringAsBytes = inputString.getBytes(StandardCharsets.UTF_8);
         cryptOutputStream.write(inputStringAsBytes);
         cryptOutputStream.flush();
         cryptOutputStream.close();
@@ -206,7 +207,7 @@ public class AESCryptService {
             decryptedStringAsBytes.write(buffer, 0, length);
         }
 
-        return decryptedStringAsBytes.toString("UTF-8");
+        return decryptedStringAsBytes.toString(StandardCharsets.UTF_8.toString());
     }
 
 }
