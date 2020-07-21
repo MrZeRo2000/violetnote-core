@@ -1,7 +1,6 @@
 package com.romanpulov.violetnotecore;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Model.PassCategory;
@@ -12,7 +11,7 @@ import com.romanpulov.violetnotecore.Processor.PinsDataReader;
 import com.romanpulov.violetnotecore.Processor.PinsDataWriter;
 import com.romanpulov.violetnotecore.Processor.XMLPassDataReader;
 import com.romanpulov.violetnotecore.Processor.XMLPassDataWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
