@@ -1,13 +1,14 @@
 package com.romanpulov.violetnotecore.Processor;
 
-import com.romanpulov.violetnotecore.Model.PassData;
+import com.romanpulov.violetnotecore.Model.PassData2;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class FilePassDataWriterV2 extends FilePassDataWriter {
-    public FilePassDataWriterV2(OutputStream outputStream, String password) {
-        super(outputStream, password);
+public class FilePassDataWriterV2 extends FilePassDataWriter<PassData2> {
+
+    public FilePassDataWriterV2(OutputStream outputStream, String password, PassData2 passData) {
+        super(outputStream, password, passData);
     }
 
     @Override
@@ -22,7 +23,7 @@ public class FilePassDataWriterV2 extends FilePassDataWriter {
     }
 
     @Override
-    public void writePassData(OutputStream cryptStream, PassData passData) {
+    public void writePassData(OutputStream cryptStream) {
 
     }
 }

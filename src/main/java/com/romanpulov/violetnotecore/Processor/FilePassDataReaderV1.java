@@ -8,7 +8,7 @@ import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class FilePassDataReaderV1 extends FilePassDataReader {
+public class FilePassDataReaderV1 extends FilePassDataReader<PassData> {
     public FilePassDataReaderV1(InputStream inputStream, String password) {
         super(inputStream, password);
     }

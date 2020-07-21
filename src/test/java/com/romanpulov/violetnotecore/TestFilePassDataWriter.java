@@ -8,18 +8,16 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestFilePassDataWriter {
-    private final FilePassDataWriter writer;
+    private final FilePassDataWriter<?> writer;
     private final String fileName;
 
-    public TestFilePassDataWriter(FilePassDataWriter writer, String fileName) {
+    public TestFilePassDataWriter(FilePassDataWriter<?> writer, String fileName) {
         this.writer = writer;
         this.fileName = fileName;
     }
 
     public void testWriteFile() throws Exception {
-        PassData passData = TestPassDataGenerator.generateTestPassData();
-
-        writer.writeFile(passData);
+        writer.writeFile();
 
         File outputFile = new File(fileName);
 

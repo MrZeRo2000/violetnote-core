@@ -8,9 +8,9 @@ import org.junit.jupiter.api.function.Executable;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestFilePassDataReader {
-    private final FilePassDataReader reader;
+    private final FilePassDataReader<PassData> reader;
 
-    public TestFilePassDataReader(FilePassDataReader reader) {
+    public TestFilePassDataReader(FilePassDataReader<PassData> reader) {
         this.reader = reader;
     }
 
