@@ -3,6 +3,7 @@ package com.romanpulov.violetnotecore.Model;
 import java.util.List;
 
 public class PassData2 {
+    public final static String ATTR_CATEGORY_LIST = "categories";
 
     private List<PassCategory2> categoryList;
 

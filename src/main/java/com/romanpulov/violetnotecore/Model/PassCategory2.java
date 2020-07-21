@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class PassCategory2 {
+    public final static String ATTR_CATEGORY_NAME = "name";
+    public final static String ATTR_NOTE_LIST = "notes";
+
     private String categoryName;
 
     private List<PassNote2> noteList;

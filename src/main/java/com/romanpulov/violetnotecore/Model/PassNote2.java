@@ -1,16 +1,17 @@
 package com.romanpulov.violetnotecore.Model;
 
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class PassNote2 {
+
     public final static String ATTR_SYSTEM = "system";
     public final static String ATTR_USER = "user";
     public final static String ATTR_PASSWORD = "password";
     public final static String ATTR_URL = "url";
     public final static String ATTR_INFO = "info";
+    public final static String ATTR_CREATED_DATE = "created date";
+    public final static String ATTR_MODIFIED_DATE = "modified date";
 
     private String system;
 
@@ -131,16 +132,6 @@ public class PassNote2 {
                 ", createdDate=" + createdDate +
                 ", modifiedDate=" + modifiedDate +
                 '}';
-    }
-
-    public Map<String, String> getNoteAttr() {
-        Map<String, String> result = new LinkedHashMap<>();
-        result.put(ATTR_SYSTEM, system);
-        result.put(ATTR_USER, user);
-        result.put(ATTR_PASSWORD, password);
-        result.put(ATTR_URL, url);
-        result.put(ATTR_INFO, info);
-        return result;
     }
 
 }
