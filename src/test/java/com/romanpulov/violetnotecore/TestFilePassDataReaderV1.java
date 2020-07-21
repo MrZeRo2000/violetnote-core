@@ -1,6 +1,5 @@
 package com.romanpulov.violetnotecore;
 
-import com.romanpulov.violetnotecore.AESCrypt.AESCryptException;
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV1;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.function.Executable;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class TestFilePassDataReaderV1 {
