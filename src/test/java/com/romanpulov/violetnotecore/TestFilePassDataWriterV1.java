@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -48,44 +46,25 @@ public class TestFilePassDataWriterV1 {
     @Test
     @Order(1)
     public void testWriteFile() throws Exception {
-        PassData passData = generateTestPassData();
+        (new TestFileManagement(TEST_FILE_NAME)).testDeleteOutputFile();
 
-        File outputFile = new File(TEST_FILE_NAME);
-        if (outputFile.exists() && !outputFile.delete()) {
-            throw new Exception("Unable to delete test file " + TEST_FILE_NAME);
-        }
-
-        OutputStream outputStream = new FileOutputStream(outputFile);
+        OutputStream outputStream = new FileOutputStream(new File(TEST_FILE_NAME));
         FilePassDataWriterV1 writerV1 = new FilePassDataWriterV1(outputStream, TEST_PASSWORD);
 
-        writerV1.writeFile(passData);
-
-        outputFile = new File(TEST_FILE_NAME);
-
-        assertTrue(outputFile.exists());
+        (new TestFilePassDataWriter(writerV1, TEST_FILE_NAME)).testWriteFile();
     }
 
     @Test
     @Order(2)
     public void testReadWrittenFile() throws Exception {
         FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(new FileInputStream(TEST_FILE_NAME), TEST_PASSWORD);
-        PassData passData = readerV1.readFile();
 
-        assertNotNull(passData);
-
-        assertEquals(1, passData.getPassCategoryList().size());
-        assertEquals(1, passData.getPassNoteList().size());
-
-        assertEquals("System", passData.getPassNoteList().get(0).getSystem());
+        (new TestFilePassDataReader(readerV1)).testReadGeneratedData();
     }
 
     @Test
     @Order(3)
     public void testDeleteOutputFile() throws Exception {
-        File outputFile = new File(TEST_FILE_NAME);
-        assertTrue(outputFile.exists());
-        if (!outputFile.delete()) {
-            throw new Exception("Unable to delete test file after tests " + TEST_FILE_NAME);
-        }
+        (new TestFileManagement(TEST_FILE_NAME)).testDeleteExistingFile();
     }
 }
