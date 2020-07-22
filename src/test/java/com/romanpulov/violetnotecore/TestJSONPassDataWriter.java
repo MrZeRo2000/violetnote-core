@@ -8,6 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -40,6 +45,7 @@ public class TestJSONPassDataWriter {
 
     @Test
     public void testWritePassData() {
+        /*
         PassNote2 passNote1 = new PassNote2("System", "User", "Password", "URL", "Info", null, null);
         PassNote2 passNote2 = new PassNote2("System2", "User2", "Password2", null, null, new Date(), null);
         PassNote2 passNote3 = new PassNote2("System3", "User3", "Password3", null, "Info 3", null, null);
@@ -53,11 +59,26 @@ public class TestJSONPassDataWriter {
         PassData2 passData = new PassData2();
         passData.setCategoryList(Arrays.asList(passCategory, passCategory2));
 
-        JSONPassDataWriter writer = new JSONPassDataWriter(passData);
+         */
+
+        JSONPassDataWriter writer = new JSONPassDataWriter(TestPassData2Generator.generateTestPassData2());
         JSONObject jo = writer.writePassData();
 
         System.out.println(jo);
     }
 
+    @Test
+    public void testWriteAndReadPassData() throws Exception {
+        PassData2 passData = TestPassData2Generator.generateTestPassData2();
+        JSONPassDataWriter writer = new JSONPassDataWriter(passData);
 
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        writer.writeStream(outputStream);
+
+        byte[] outputBytes = outputStream.toByteArray();
+        //ByteArrayInputStream inputStream = new ByteArrayInputStream(outputBytes);
+        String outputString = new String(outputBytes, StandardCharsets.UTF_8);
+
+        System.out.println(outputString);
+    }
 }

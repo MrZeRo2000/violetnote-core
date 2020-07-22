@@ -1,6 +1,7 @@
 package com.romanpulov.violetnotecore.Processor;
 
 import com.romanpulov.violetnotecore.Model.PassData2;
+import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,7 +24,7 @@ public class FilePassDataWriterV2 extends FilePassDataWriter<PassData2> {
     }
 
     @Override
-    public void writePassData(OutputStream cryptStream) {
-
+    public void writePassData(OutputStream cryptStream) throws DataReadWriteException {
+        (new JSONPassDataWriter(data)).writeStream(cryptStream);
     }
 }

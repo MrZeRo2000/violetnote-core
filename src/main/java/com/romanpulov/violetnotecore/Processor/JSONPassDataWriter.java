@@ -3,9 +3,14 @@ package com.romanpulov.violetnotecore.Processor;
 import com.romanpulov.violetnotecore.Model.PassCategory2;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Model.PassNote2;
+import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
+import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteIOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -65,5 +70,13 @@ public class JSONPassDataWriter {
     public JSONObject writePassData() {
         return new JSONObject()
             .put(PassData2.ATTR_CATEGORY_LIST, writePassCategoryList(passData.getCategoryList()));
+    }
+
+    public void writeStream(OutputStream stream) throws DataReadWriteException {
+        try {
+            stream.write(writePassData().toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new DataReadWriteIOException(e.getMessage());
+        }
     }
 }

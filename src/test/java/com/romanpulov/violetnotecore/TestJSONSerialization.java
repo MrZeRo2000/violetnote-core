@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONWriter;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestJSONSerialization {
 
@@ -36,5 +37,16 @@ public class TestJSONSerialization {
         ja12.put(jo2);
 
         System.out.println(ja12.toString());
+    }
+
+    @Test
+    public void testStringToJSON() {
+        String json = "{\"categories\":[{\"notes\":[{\"password\":\"Password 1\",\"system\":\"System 1\",\"user\":\"User 1\",\"url\":\"URL 1\",\"info\":\"Info 1\"},{\"password\":\"Password 2\",\"system\":\"System 2\",\"user\":\"User 2\",\"url\":\"URL 2\",\"info\":\"Info 2\"}],\"name\":\"Category 1\"},{\"notes\":[{\"password\":\"Password 3\",\"system\":\"System 3\",\"user\":\"User 3\",\"url\":\"URL 3\",\"info\":\"Info 3\"}],\"name\":\"Category 2\"}]}";
+        JSONObject jo = new JSONObject(json);
+        JSONArray ja = jo.optJSONArray("categories");
+        assertNotNull(ja);
+
+        JSONArray ja1 = jo.optJSONArray("categories1");
+        assertNull(ja1);
     }
 }
