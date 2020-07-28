@@ -11,18 +11,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-public class JSONPassDataWriter {
+public class JSONPassDataWriter extends JSONDataProcessor {
     private final PassData2 passData;
-
-    private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-    private static String formatDate(Date date) {
-        return date == null ? null : df.format(date);
-    }
 
     public JSONPassDataWriter(PassData2 passData) {
         this.passData = passData;
