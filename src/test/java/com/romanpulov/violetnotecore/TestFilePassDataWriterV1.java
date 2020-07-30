@@ -24,7 +24,7 @@ public class TestFilePassDataWriterV1 {
         (new TestFileManagement(TEST_FILE_NAME)).testDeleteOutputFile();
 
         OutputStream outputStream = new FileOutputStream(new File(TEST_FILE_NAME));
-        PassData passData = TestPassDataGenerator.generateTestPassData();
+        PassData passData = TestPassDataTools.generateTestPassData();
         FilePassDataWriterV1 writerV1 = new FilePassDataWriterV1(outputStream, TEST_PASSWORD, passData);
 
         (new TestFilePassDataWriter(writerV1, TEST_FILE_NAME)).testWriteFile();

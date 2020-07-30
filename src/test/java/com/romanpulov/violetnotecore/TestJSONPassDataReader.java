@@ -1,10 +1,15 @@
 package com.romanpulov.violetnotecore;
 
+import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.JSONDataProcessor;
 import com.romanpulov.violetnotecore.Processor.JSONPassDataReader;
+import com.romanpulov.violetnotecore.Processor.JSONPassDataWriter;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,4 +54,31 @@ public class TestJSONPassDataReader {
         assertNull(JSONPassDataReader.parseDate(null));
         assertNull(JSONPassDataReader.parseDate("sss"));
     }
+
+    @Test
+    public void testWriteAndReadPassData() throws Exception {
+        PassData2 passData = TestPassData2Generator.generateTestPassData2();
+        JSONPassDataWriter writer = new JSONPassDataWriter(passData);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        writer.writeStream(outputStream);
+
+        byte[] outputBytes = outputStream.toByteArray();
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputBytes);
+
+        JSONPassDataReader reader = new JSONPassDataReader();
+
+        PassData2 readPassData = reader.readStream(inputStream);
+
+        assertNotNull(readPassData);
+        assertEquals(passData.getCategoryList().size(), readPassData.getCategoryList().size());
+
+        String dataEqualResult = TestPassDataTools.passDataEquals(passData, readPassData);
+        if (dataEqualResult != null) {
+            fail(dataEqualResult);
+        }
+
+    }
+
 }
