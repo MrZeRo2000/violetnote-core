@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestFilePassDataWriterV1 {
+public class TestFilePassDataReaderWriterV1 {
     private static final String TEST_FILE_NAME = "data\\test_out.vnf";
     private static final String TEST_PASSWORD = "123456";
 

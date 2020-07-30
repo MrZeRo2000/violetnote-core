@@ -42,4 +42,5 @@ public class TestFilePassDataReader {
 
         assertEquals("System", passData.getPassNoteList().get(0).getSystem());
     }
+
 }

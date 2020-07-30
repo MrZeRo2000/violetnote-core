@@ -19,8 +19,8 @@ public class FilePassDataWriterV2 extends FilePassDataWriter<PassData2> {
 
     @Override
     protected void writeVersion() throws IOException {
-        outputStream.write(0);
-        outputStream.write(2);
+        byte[] version = new byte[] {0, 2};
+        outputStream.write(version);
     }
 
     @Override

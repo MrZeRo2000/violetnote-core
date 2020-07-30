@@ -17,9 +17,9 @@ public abstract class FilePassDataReader<T> extends FileDataProcessor {
         this.password = password;
     }
 
-    protected void readHeader() throws IOException {}
+    protected void readHeader() throws IOException, DataReadWriteException {}
 
-    protected void readVersion() throws IOException {}
+    protected void readVersion() throws IOException, DataReadWriteException {}
 
     public final T readFile() throws AESCryptException, IOException, DataReadWriteException {
         readHeader();
