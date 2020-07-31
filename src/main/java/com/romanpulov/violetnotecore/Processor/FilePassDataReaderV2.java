@@ -4,7 +4,6 @@ import com.romanpulov.violetnotecore.AESCrypt.AESCryptException;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -38,13 +37,13 @@ public class FilePassDataReaderV2 extends FilePassDataReader<PassData2> {
         }
 
         if (!Arrays.equals(version, new byte[]{0, 2})) {
-            throw new DataReadWriteException("Error reading version: wrong version:" + version);
+            throw new DataReadWriteException("Error reading version: wrong version:" + Arrays.toString(version));
         }
 
     }
 
     @Override
-    public PassData2 readPassData(InputStream cryptStream) throws AESCryptException, IOException, DataReadWriteException {
-        return null;
+    public PassData2 readPassData(InputStream cryptStream) throws DataReadWriteException {
+        return (new JSONPassDataReader().readStream(cryptStream));
     }
 }
