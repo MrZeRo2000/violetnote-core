@@ -1,6 +1,5 @@
 package com.romanpulov.violetnotecore.Processor;
 
-import com.romanpulov.violetnotecore.AESCrypt.AESCryptException;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 
@@ -8,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+/**
+ * Reads PassData2 from InputStream version 2
+ */
 public class FilePassDataReaderV2 extends FilePassDataReader<PassData2> {
     public FilePassDataReaderV2(InputStream inputStream, String password) {
         super(inputStream, password);

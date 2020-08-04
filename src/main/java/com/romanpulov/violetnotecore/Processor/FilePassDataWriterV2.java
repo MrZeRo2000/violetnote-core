@@ -6,6 +6,9 @@ import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Writes PassData2 to outputStream version 2
+ */
 public class FilePassDataWriterV2 extends FilePassDataWriter<PassData2> {
 
     public FilePassDataWriterV2(OutputStream outputStream, String password, PassData2 passData) {
