@@ -1,5 +1,7 @@
 package com.romanpulov.violetnotecore.Processor;
 
+import com.romanpulov.violetnotecore.AESCrypt.AESCryptConfigurationFactory;
+import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 
@@ -13,6 +15,11 @@ import java.util.Arrays;
 public class FilePassDataReaderV2 extends FilePassDataReader<PassData2> {
     public FilePassDataReaderV2(InputStream inputStream, String password) {
         super(inputStream, password);
+    }
+
+    @Override
+    protected AESCryptService createCryptService() {
+        return new AESCryptService((AESCryptConfigurationFactory.createAES256()));
     }
 
     @Override

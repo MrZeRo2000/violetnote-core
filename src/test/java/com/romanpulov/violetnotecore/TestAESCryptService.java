@@ -1,12 +1,17 @@
 package com.romanpulov.violetnotecore;
 
+import com.romanpulov.violetnotecore.AESCrypt.AESCryptConfigurationFactory;
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Utils.HexConverter;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -126,5 +131,39 @@ public class TestAESCryptService {
         }
 
         throw new Exception("Should not get here: wrong password did not throw exception");
+    }
+
+    @Test
+    public void testAES2Crypt() throws Exception {
+        AESCryptService writeAESCryptService = new AESCryptService(AESCryptConfigurationFactory.createAES256());
+
+        final String testString = "+- df23rd df0w94df sdfswert 00";
+        final String testPassword = "123456";
+
+        byte[] bytes = testString.getBytes(StandardCharsets.UTF_8);
+
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        OutputStream outputStream = writeAESCryptService.generateCryptOutputStream(outBuffer, testPassword);
+        outputStream.write(bytes);
+        outputStream.flush();
+        outputStream.close();
+
+        byte[] outputBytes = outBuffer.toByteArray();
+
+        AESCryptService readAESCryptService = new AESCryptService(AESCryptConfigurationFactory.createAES256());
+
+        InputStream inputStream = readAESCryptService.generateCryptInputStream(new ByteArrayInputStream(outputBytes), testPassword);
+
+        ByteArrayOutputStream readBuffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[1024];
+        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+            readBuffer.write(data, 0, nRead);
+        }
+
+        byte[] readBytes = readBuffer.toByteArray();
+
+        assertArrayEquals(bytes, readBytes);
+        assertEquals(testString, new String(readBytes, StandardCharsets.UTF_8));
     }
 }

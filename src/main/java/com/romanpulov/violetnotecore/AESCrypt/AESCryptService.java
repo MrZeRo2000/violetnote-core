@@ -18,14 +18,14 @@ import java.security.spec.KeySpec;
  */
 public class AESCryptService {
 
-    private static AESCryptConfiguration CRYPT_CONFIGURATION;
+    private final AESCryptConfiguration cryptConfiguration;
 
-    static {
-        CRYPT_CONFIGURATION = AESCryptConfigurationFactory.createDefault();
+    public AESCryptService(AESCryptConfiguration cryptConfiguration) {
+        this.cryptConfiguration = cryptConfiguration;
     }
 
-    public static void configure(AESCryptConfiguration cryptConfiguration) {
-        AESCryptService.CRYPT_CONFIGURATION = cryptConfiguration;
+    public AESCryptService() {
+        this(AESCryptConfigurationFactory.createDefault());
     }
 
     private byte[] salt;
@@ -59,13 +59,12 @@ public class AESCryptService {
         //factory
         SecretKeyFactory factory;
         try {
-//            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-              factory = SecretKeyFactory.getInstance(CRYPT_CONFIGURATION.secretKeyInstance);
+              factory = SecretKeyFactory.getInstance(cryptConfiguration.secretKeyInstance);
         } catch (NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
         //key spec
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, CRYPT_CONFIGURATION.iterations, CRYPT_CONFIGURATION.keyLen);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, cryptConfiguration.iterations, cryptConfiguration.keyLen);
 
         //secret key
         SecretKey temporaryKey;
@@ -81,13 +80,13 @@ public class AESCryptService {
     public void generateEncryptCipher(String password) throws AESCryptException {
         //create cipher
         try {
-            cipher = Cipher.getInstance(CRYPT_CONFIGURATION.cipherInstance);
+            cipher = Cipher.getInstance(cryptConfiguration.cipherInstance);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
         }
 
         //generate salt
-        salt = generateSalt(CRYPT_CONFIGURATION.saltLen);
+        salt = generateSalt(cryptConfiguration.saltLen);
         secretKey = generateKey(password, salt);
 
         try {
@@ -109,7 +108,7 @@ public class AESCryptService {
         this.secretKey = generateKey(password, salt);
         this.iv = iv;
         try {
-            cipher = Cipher.getInstance(CRYPT_CONFIGURATION.cipherInstance);
+            cipher = Cipher.getInstance(cryptConfiguration.cipherInstance);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
         } catch(NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException e) {
             throw new AESCryptException(e.getMessage());
@@ -125,13 +124,12 @@ public class AESCryptService {
      * @throws AESCryptException
      * @throws IOException
      */
-    public static OutputStream generateCryptOutputStream (OutputStream output, String password) throws AESCryptException, IOException {
-        AESCryptService s = new AESCryptService();
-        s.generateEncryptCipher(password);
-        output.write(s.getSalt());
-        output.write(s.getIv());
+    public OutputStream generateCryptOutputStream (OutputStream output, String password) throws AESCryptException, IOException {
+        generateEncryptCipher(password);
+        output.write(getSalt());
+        output.write(getIv());
 
-        return new CipherOutputStream(output, s.getCipher());
+        return new CipherOutputStream(output, getCipher());
     }
 
     /**
@@ -143,25 +141,24 @@ public class AESCryptService {
      * @throws AESCryptException
      * @throws IOException
      */
-    public static InputStream generateCryptInputStream(InputStream input, String password) throws AESCryptException, IOException {
+    public InputStream generateCryptInputStream(InputStream input, String password) throws AESCryptException, IOException {
         int readBytes;
 
-        byte[] inSalt = new byte[CRYPT_CONFIGURATION.saltLen];
+        byte[] inSalt = new byte[cryptConfiguration.saltLen];
         readBytes = input.read(inSalt, 0, inSalt.length);
         if (readBytes != inSalt.length) {
             throw new AESCryptException("Error reading salt : " + readBytes);
         }
 
-        byte[] inIV = new byte[CRYPT_CONFIGURATION.keyLen / 8];
+        byte[] inIV = new byte[cryptConfiguration.IVLen];
         readBytes = input.read(inIV, 0, inIV.length);
         if (readBytes != inIV.length) {
             throw new AESCryptException("Error reading IV : " + readBytes);
         }
 
-        AESCryptService inCipher = new AESCryptService();
-        inCipher.generateDecryptCipher(password, inSalt, inIV);
+        generateDecryptCipher(password, inSalt, inIV);
 
-        return new CipherInputStream(input, inCipher.getCipher());
+        return new CipherInputStream(input, getCipher());
     }
 
     /**
@@ -176,7 +173,7 @@ public class AESCryptService {
     public static String encryptString(String inputString, String password) throws AESCryptException, IOException {
         //prepare output stream
         ByteArrayOutputStream dataOutputStream = new ByteArrayOutputStream();
-        OutputStream cryptOutputStream = AESCryptService.generateCryptOutputStream(dataOutputStream, password);
+        OutputStream cryptOutputStream = (new AESCryptService()).generateCryptOutputStream(dataOutputStream, password);
 
         //convert and write
         byte[] inputStringAsBytes = inputString.getBytes(StandardCharsets.UTF_8);
@@ -201,7 +198,7 @@ public class AESCryptService {
     public static String decryptString(String inputString, String password) throws AESCryptException, IOException {
         //prepare input stream
         ByteArrayInputStream encryptedStringAsBytes = new ByteArrayInputStream(HexConverter.hexToBytes(inputString));
-        InputStream cryptInputStream = AESCryptService.generateCryptInputStream(encryptedStringAsBytes, password);
+        InputStream cryptInputStream = (new AESCryptService()).generateCryptInputStream(encryptedStringAsBytes, password);
 
         //read from encrypted stream
         ByteArrayOutputStream decryptedStringAsBytes = new ByteArrayOutputStream();

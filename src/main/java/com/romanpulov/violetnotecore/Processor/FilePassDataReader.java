@@ -24,7 +24,10 @@ public abstract class FilePassDataReader<T> extends FileDataProcessor {
     public final T readFile() throws AESCryptException, IOException, DataReadWriteException {
         readHeader();
         readVersion();
-        try (InputStream cryptStream =  AESCryptService.generateCryptInputStream(inputStream, password))
+
+        AESCryptService aesCryptService = createCryptService();
+
+        try (InputStream cryptStream =  aesCryptService.generateCryptInputStream(inputStream, password))
         {
             return readPassData(cryptStream);
         }

@@ -1,5 +1,6 @@
 package com.romanpulov.violetnotecore.Processor;
 
+import com.romanpulov.violetnotecore.AESCrypt.AESCryptConfigurationFactory;
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptException;
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
@@ -23,12 +24,21 @@ public abstract class FilePassDataWriter<T> extends FileDataProcessor {
 
     protected void writeVersion() throws IOException {}
 
+    @Override
+    protected AESCryptService createCryptService() {
+        return new AESCryptService(AESCryptConfigurationFactory.createDefault());
+    }
+
     public final void writeFile() throws AESCryptException, IOException, DataReadWriteException {
         writeHeader();
         writeVersion();
-        try (OutputStream cryptStream = AESCryptService.generateCryptOutputStream(outputStream, password))
+
+        AESCryptService aesCryptService = createCryptService();
+
+        try (OutputStream cryptStream = aesCryptService.generateCryptOutputStream(outputStream, password))
         {
             writePassData(cryptStream);
+            cryptStream.flush();
         }
     }
 

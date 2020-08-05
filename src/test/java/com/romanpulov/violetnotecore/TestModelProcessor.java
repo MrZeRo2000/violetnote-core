@@ -11,6 +11,8 @@ import com.romanpulov.violetnotecore.Processor.PinsDataReader;
 import com.romanpulov.violetnotecore.Processor.PinsDataWriter;
 import com.romanpulov.violetnotecore.Processor.XMLPassDataReader;
 import com.romanpulov.violetnotecore.Processor.XMLPassDataWriter;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.CipherInputStream;
@@ -22,6 +24,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.junit.jupiter.api.TestMethodOrder;
 import org.w3c.dom.*;
 
 import java.io.*;
@@ -30,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestModelProcessor {
 
     private static final String TEST_CSV_LF_FILE_NAME = "data\\pins_example.csv";
@@ -68,6 +71,7 @@ public class TestModelProcessor {
     }
 
     @Test
+    @Order(1)
     public void pinsSaveTest() throws Exception {
         PinsDataReader pinsReader = new PinsDataReader();
         PassData pd = pinsReader.readStream(new FileInputStream(TEST_CSV_LF_FILE_NAME));
@@ -141,6 +145,7 @@ public class TestModelProcessor {
     }
 
     @Test
+    @Order(2)
     public void xmlPassDataWriterTest() throws  Exception{
         // load something
         PinsDataReader pinsReader = new PinsDataReader();
@@ -204,6 +209,7 @@ public class TestModelProcessor {
     }
 
     @Test
+    @Order(3)
     public void PassCategoryEqualsTest() {
         // category without parent
         PassCategory c1 = new PassCategory("cat1");
@@ -242,6 +248,7 @@ public class TestModelProcessor {
     }
 
     @Test
+    @Order(4)
     public void XMLReadWriteEquivalenceTest() throws Exception {
         // get something to PassData
         PassData pd = getPINSPassData();
@@ -267,11 +274,12 @@ public class TestModelProcessor {
     }
 
     @Test
+    @Order(5)
     public void CryptXMLReadWriteEquivalenceTest() throws Exception {
         // get something to PassData
         PassData pd = getPINSPassData();
 
-        OutputStream output = AESCryptService.generateCryptOutputStream(new FileOutputStream(TEST_OUT_VNF_FILE_NAME), TEST_PASSWORD);
+        OutputStream output = (new AESCryptService()).generateCryptOutputStream(new FileOutputStream(TEST_OUT_VNF_FILE_NAME), TEST_PASSWORD);
 
         //write to crypt output file
         XMLPassDataWriter writer = new XMLPassDataWriter(pd);
@@ -285,7 +293,7 @@ public class TestModelProcessor {
         output.close();
 
         //read from crypt output file to another PassData
-        InputStream input = AESCryptService.generateCryptInputStream(new FileInputStream(TEST_OUT_VNF_FILE_NAME), TEST_PASSWORD);
+        InputStream input = (new AESCryptService()).generateCryptInputStream(new FileInputStream(TEST_OUT_VNF_FILE_NAME), TEST_PASSWORD);
 
         XMLPassDataReader reader = new XMLPassDataReader();
         PassData pd1= reader.readStream(input);

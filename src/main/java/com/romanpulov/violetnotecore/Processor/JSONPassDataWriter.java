@@ -66,7 +66,8 @@ public class JSONPassDataWriter extends JSONDataProcessor {
 
     public void writeStream(OutputStream stream) throws DataReadWriteException {
         try {
-            stream.write(writePassData().toString().getBytes(StandardCharsets.UTF_8));
+            byte[] data = writePassData().toString().getBytes(StandardCharsets.UTF_8);
+            stream.write(data);
         } catch (IOException e) {
             throw new DataReadWriteIOException(e.getMessage());
         }

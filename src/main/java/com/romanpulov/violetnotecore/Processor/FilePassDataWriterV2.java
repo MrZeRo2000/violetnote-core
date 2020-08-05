@@ -1,5 +1,7 @@
 package com.romanpulov.violetnotecore.Processor;
 
+import com.romanpulov.violetnotecore.AESCrypt.AESCryptConfigurationFactory;
+import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 
@@ -24,6 +26,11 @@ public class FilePassDataWriterV2 extends FilePassDataWriter<PassData2> {
     protected void writeVersion() throws IOException {
         byte[] version = new byte[] {0, 2};
         outputStream.write(version);
+    }
+
+    @Override
+    protected AESCryptService createCryptService() {
+        return new AESCryptService(AESCryptConfigurationFactory.createAES256());
     }
 
     @Override
