@@ -3,17 +3,23 @@ package com.romanpulov.violetnotecore;
 
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassData2;
+import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV1;
 import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV2;
 import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV1;
 import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV2;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.*;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestFilePassDataPerformance {
     private static final String TEST_FILE_NAME_1 = "data\\test_performance_out_1.vnf";
     private static final String TEST_FILE_NAME_2 = "data\\test_performance_out_2.vnf";
@@ -108,6 +114,38 @@ public class TestFilePassDataPerformance {
 
     @Test
     @Order(5)
+    public void testReadWrongFile() throws Exception {
+        assertThrows(DataReadWriteException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1))
+                {
+                    FilePassDataReaderV2 readerV2 = new FilePassDataReaderV2(inputStream, TEST_PASSWORD);
+                    readerV2.readFile();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+        });
+
+        assertThrows(DataReadWriteException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_2))
+                {
+                    FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(inputStream, TEST_PASSWORD);
+                    readerV1.readFile();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+        });
+    }
+
+    @Test
+    @Order(10)
     public void testDeleteOutputFile() throws Exception {
         (new TestFileManagement(TEST_FILE_NAME_1)).testDeleteExistingFile();
         (new TestFileManagement(TEST_FILE_NAME_2)).testDeleteExistingFile();
