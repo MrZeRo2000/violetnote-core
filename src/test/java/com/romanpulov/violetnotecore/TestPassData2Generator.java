@@ -36,4 +36,31 @@ public class TestPassData2Generator {
 
         return new PassData2(passCategoryList);
     }
+
+    public static PassData2 generateTestPassData2(int numCategories, int numNotes) {
+
+        List<PassCategory2> passCategoryList = new ArrayList<>();
+
+        for (int categoryNum = 0; categoryNum < numCategories; categoryNum ++) {
+            PassCategory2 passCategory = new PassCategory2("Category " + categoryNum);
+            List<PassNote2> passNoteList = new ArrayList<>();
+
+            for (int noteNum = 0; noteNum < numNotes; noteNum ++) {
+                passNoteList.add(new PassNote2(
+                        "System " + categoryNum + "" + noteNum,
+                        "User " + categoryNum + "" + noteNum,
+                        "Password " + categoryNum + "" + noteNum,
+                        "URL " + categoryNum + "" + noteNum,
+                        "Info " + categoryNum + "" + noteNum,
+                        null,
+                        null
+                ));
+            }
+
+            passCategory.setNoteList(passNoteList);
+            passCategoryList.add(passCategory);
+        }
+
+        return new PassData2(passCategoryList);
+    }
 }

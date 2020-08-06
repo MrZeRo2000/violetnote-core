@@ -27,6 +27,35 @@ public class TestPassDataTools {
         return passData;
     }
 
+    public static PassData generateTestPassData(int numCategories, int numNotes) {
+
+        List<PassCategory> passCategoryList = new ArrayList<>();
+        List<PassNote> passNoteList = new ArrayList<>();
+
+        for (int categoryNum = 0; categoryNum < numCategories; categoryNum ++) {
+            PassCategory passCategory = new PassCategory("Category " + categoryNum);
+            passCategoryList.add(passCategory);
+
+            for (int noteNum = 0; noteNum < numNotes; noteNum ++) {
+                passNoteList.add(new PassNote(
+                        passCategory,
+                        "System " + categoryNum + "" + noteNum,
+                        "User " + categoryNum + "" + noteNum,
+                        "Password " + categoryNum + "" + noteNum,
+                        "Comments " + categoryNum + "" + noteNum,
+                        "Custom " + categoryNum + "" + noteNum,
+                        "Info " + categoryNum + "" + noteNum)
+                );
+            }
+        }
+
+        PassData passData = new PassData();
+        passData.setPassCategoryList(passCategoryList);
+        passData.setPassNoteList(passNoteList);
+
+        return passData;
+    }
+
     public static String passDataEquals(PassData2 passData1, PassData2 passData2) {
         if ((passData1 == null) || (passData2 == null)) {
             return "Null passData1 or passData2";
