@@ -113,7 +113,11 @@ public class PassNote2 {
         if (o == null || getClass() != o.getClass()) return false;
         PassNote2 passNote2 = (PassNote2) o;
         return system.equals(passNote2.system) &&
-                user.equals(passNote2.user);
+                user.equals(passNote2.user) &&
+                password.equals(passNote2.password) &&
+                ((url == null && passNote2.url == null) || (url != null) && (url.equals(passNote2.url))) &&
+                ((info == null && passNote2.info == null) || (info != null) && (info.equals(passNote2.info)))
+                ;
     }
 
     @Override
