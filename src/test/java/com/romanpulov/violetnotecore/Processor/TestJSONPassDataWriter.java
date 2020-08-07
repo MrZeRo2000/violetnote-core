@@ -1,9 +1,10 @@
-package com.romanpulov.violetnotecore;
+package com.romanpulov.violetnotecore.Processor;
 
 import com.romanpulov.violetnotecore.Model.PassCategory2;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Model.PassNote2;
 import com.romanpulov.violetnotecore.Processor.JSONPassDataWriter;
+import com.romanpulov.violetnotecore.TestPassData2Generator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,10 @@
-package com.romanpulov.violetnotecore;
+package com.romanpulov.violetnotecore.Processor;
 
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
-import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV2;
-import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV2;
+import com.romanpulov.violetnotecore.TestFileManagement;
+import com.romanpulov.violetnotecore.TestPassData2Generator;
+import com.romanpulov.violetnotecore.TestPassDataTools;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 

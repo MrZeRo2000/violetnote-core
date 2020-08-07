@@ -1,4 +1,4 @@
-package com.romanpulov.violetnotecore;
+package com.romanpulov.violetnotecore.Processor;
 
 import com.romanpulov.violetnotecore.Processor.AbstractFilePassDataWriter;
 

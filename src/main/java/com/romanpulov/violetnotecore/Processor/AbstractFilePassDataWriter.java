@@ -29,7 +29,7 @@ public abstract class AbstractFilePassDataWriter<T> extends AbstractFileDataProc
         return new AESCryptService(AESCryptConfigurationFactory.createDefault());
     }
 
-    public final void writeFile() throws AESCryptException, IOException, DataReadWriteException {
+    protected final void writeFile() throws AESCryptException, IOException, DataReadWriteException {
         writeHeader();
         writeVersion();
 

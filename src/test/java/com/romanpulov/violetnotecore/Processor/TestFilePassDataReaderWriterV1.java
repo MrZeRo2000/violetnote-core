@@ -1,8 +1,8 @@
-package com.romanpulov.violetnotecore;
+package com.romanpulov.violetnotecore.Processor;
 
 import com.romanpulov.violetnotecore.Model.PassData;
-import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV1;
-import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV1;
+import com.romanpulov.violetnotecore.TestFileManagement;
+import com.romanpulov.violetnotecore.TestPassDataTools;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

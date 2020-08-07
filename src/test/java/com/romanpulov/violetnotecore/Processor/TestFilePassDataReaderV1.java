@@ -1,7 +1,7 @@
-package com.romanpulov.violetnotecore;
+package com.romanpulov.violetnotecore.Processor;
 
-import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV1;
+import com.romanpulov.violetnotecore.Processor.TestFilePassDataReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;

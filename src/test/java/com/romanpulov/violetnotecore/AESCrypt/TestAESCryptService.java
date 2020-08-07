@@ -1,4 +1,4 @@
-package com.romanpulov.violetnotecore;
+package com.romanpulov.violetnotecore.AESCrypt;
 
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptConfigurationFactory;
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
