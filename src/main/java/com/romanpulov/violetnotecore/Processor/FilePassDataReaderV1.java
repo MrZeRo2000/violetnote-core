@@ -21,7 +21,7 @@ public class FilePassDataReaderV1 extends AbstractFilePassDataReader<PassData> {
     }
 
     @Override
-    public PassData readPassData(InputStream cryptStream) throws DataReadWriteException {
+    protected PassData readPassData(InputStream cryptStream) throws DataReadWriteException {
         return (new XMLPassDataReader()).readStream(cryptStream);
     }
 }

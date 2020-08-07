@@ -5,6 +5,8 @@ import com.romanpulov.violetnotecore.Converter.PassData2Converter;
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
+import com.romanpulov.violetnotecore.Service.PassData2ReaderService;
+import com.romanpulov.violetnotecore.Service.PassData2WriterService;
 import com.romanpulov.violetnotecore.TestFileManagement;
 import com.romanpulov.violetnotecore.TestPassData2Generator;
 import com.romanpulov.violetnotecore.TestPassDataTools;

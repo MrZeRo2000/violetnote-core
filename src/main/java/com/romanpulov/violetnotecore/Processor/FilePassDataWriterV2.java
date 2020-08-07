@@ -34,7 +34,7 @@ public class FilePassDataWriterV2 extends AbstractFilePassDataWriter<PassData2> 
     }
 
     @Override
-    public void writePassData(OutputStream cryptStream) throws DataReadWriteException {
+    protected void writePassData(OutputStream cryptStream) throws DataReadWriteException {
         (new JSONPassDataWriter(data)).writeStream(cryptStream);
     }
 }

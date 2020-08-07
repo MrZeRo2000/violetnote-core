@@ -52,7 +52,7 @@ public class FilePassDataReaderV2 extends AbstractFilePassDataReader<PassData2> 
     }
 
     @Override
-    public PassData2 readPassData(InputStream cryptStream) throws DataReadWriteException {
+    protected PassData2 readPassData(InputStream cryptStream) throws DataReadWriteException {
         return (new JSONPassDataReader().readStream(cryptStream));
     }
 }

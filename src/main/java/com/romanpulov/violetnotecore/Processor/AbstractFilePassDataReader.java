@@ -21,7 +21,7 @@ public abstract class AbstractFilePassDataReader<T> extends AbstractFileDataProc
 
     protected void readVersion() throws IOException, DataReadWriteException {}
 
-    protected final T readFile() throws AESCryptException, IOException, DataReadWriteException {
+    public final T readFile() throws AESCryptException, IOException, DataReadWriteException {
         readHeader();
         readVersion();
 
@@ -33,5 +33,5 @@ public abstract class AbstractFilePassDataReader<T> extends AbstractFileDataProc
         }
     };
 
-    public abstract T readPassData(InputStream cryptStream) throws AESCryptException, IOException, DataReadWriteException;
+    protected abstract T readPassData(InputStream cryptStream) throws AESCryptException, IOException, DataReadWriteException;
 }

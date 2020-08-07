@@ -1,8 +1,9 @@
-package com.romanpulov.violetnotecore.Processor;
+package com.romanpulov.violetnotecore.Service;
 
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptException;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
+import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV2;
 
 import java.io.IOException;
 import java.io.OutputStream;
