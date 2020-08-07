@@ -2,15 +2,15 @@ package com.romanpulov.violetnotecore;
 
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
-import com.romanpulov.violetnotecore.Processor.FilePassDataReader;
+import com.romanpulov.violetnotecore.Processor.AbstractFilePassDataReader;
 import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestFilePassDataReader {
-    private final FilePassDataReader<PassData> reader;
+    private final AbstractFilePassDataReader<PassData> reader;
 
-    public TestFilePassDataReader(FilePassDataReader<PassData> reader) {
+    public TestFilePassDataReader(AbstractFilePassDataReader<PassData> reader) {
         this.reader = reader;
     }
 

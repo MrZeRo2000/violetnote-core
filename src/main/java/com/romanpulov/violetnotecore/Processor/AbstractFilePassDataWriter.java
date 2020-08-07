@@ -8,13 +8,13 @@ import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public abstract class FilePassDataWriter<T> extends FileDataProcessor {
+public abstract class AbstractFilePassDataWriter<T> extends AbstractFileDataProcessor {
 
     protected final OutputStream outputStream;
     protected final String password;
     protected final T data;
 
-    public FilePassDataWriter(OutputStream outputStream, String password, T data) {
+    public AbstractFilePassDataWriter(OutputStream outputStream, String password, T data) {
         this.outputStream = outputStream;
         this.password = password;
         this.data = data;

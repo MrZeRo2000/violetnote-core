@@ -7,12 +7,12 @@ import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public abstract class FilePassDataReader<T> extends FileDataProcessor {
+public abstract class AbstractFilePassDataReader<T> extends AbstractFileDataProcessor {
 
     protected final InputStream inputStream;
     protected final String password;
 
-    public FilePassDataReader(InputStream inputStream, String password) {
+    public AbstractFilePassDataReader(InputStream inputStream, String password) {
         this.inputStream = inputStream;
         this.password = password;
     }

@@ -1,23 +1,17 @@
 package com.romanpulov.violetnotecore;
 
 
+import com.romanpulov.violetnotecore.Converter.PassData2Converter;
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassData2;
+import com.romanpulov.violetnotecore.Processor.*;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
-import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV1;
-import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV2;
-import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV1;
-import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV2;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 
 import java.io.*;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestFilePassDataPerformance {
@@ -79,7 +73,7 @@ public class TestFilePassDataPerformance {
             long startTime = System.nanoTime();
 
             FilePassDataWriterV2 writerV2 = new FilePassDataWriterV2(outputStream, TEST_PASSWORD, passData2);
-            (new TestFilePassDataWriter(writerV2, TEST_FILE_NAME_1)).testWriteFile();
+            (new TestFilePassDataWriter(writerV2, TEST_FILE_NAME_2)).testWriteFile();
 
             long endTime = System.nanoTime();
 
@@ -89,6 +83,23 @@ public class TestFilePassDataPerformance {
 
     @Test
     @Order(4)
+    public void testWriteServiceFile2() throws Exception {
+        (new TestFileManagement(TEST_FILE_NAME_2)).testDeleteOutputFile();
+
+        try (OutputStream outputStream = new FileOutputStream(new File(TEST_FILE_NAME_2)))
+        {
+            long startTime = System.nanoTime();
+
+            PassData2WriterService.toStream(outputStream, TEST_PASSWORD, passData2);
+
+            long endTime = System.nanoTime();
+
+            printExecutionTime("Write file service file 2", startTime, endTime);
+        }
+    }
+
+    @Test
+    @Order(5)
     public void testReadFile2() throws Exception {
         try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_2))
         {
@@ -113,7 +124,7 @@ public class TestFilePassDataPerformance {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void testReadWrongFile() throws Exception {
         assertThrows(DataReadWriteException.class, new Executable() {
             @Override
@@ -143,6 +154,68 @@ public class TestFilePassDataPerformance {
             }
         });
     }
+
+    @Test
+    @Order(7)
+    public void testReadOldVersionFile() throws Exception {
+
+        PassData2 passData2 = null;
+
+        try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1)) {
+            FilePassDataReaderV2 readerV2 = new FilePassDataReaderV2(inputStream, TEST_PASSWORD);
+            passData2 = readerV2.readFile();
+            fail("Should raise exception after reading the wrong file");
+        } catch (DataReadWriteException e) {
+            try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1)) {
+                FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(inputStream, TEST_PASSWORD);
+                PassData passData = readerV1.readFile();
+                passData2 = PassData2Converter.from(passData);
+            }
+        }
+
+        assertNotNull(passData2);
+    }
+
+    @Test
+    @Order(8)
+    public void testReadMarkOldVersionFile() throws Exception {
+
+        PassData2 passData2;
+
+        try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1)) {
+            try (BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
+                bufferedInputStream.mark(10);
+
+                try {
+                    FilePassDataReaderV2 readerV2 = new FilePassDataReaderV2(bufferedInputStream, TEST_PASSWORD);
+                    readerV2.readFile();
+                    fail("Should raise exception after reading the wrong file");
+                } catch (DataReadWriteException e) {
+                    bufferedInputStream.reset();
+
+                    FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(bufferedInputStream, TEST_PASSWORD);
+                    PassData passData = readerV1.readFile();
+                    passData2 = PassData2Converter.from(passData);
+
+                    assertNotNull(passData2);
+                }
+            }
+        }
+    }
+
+    @Test
+    @Order(9)
+    public void testReadServiceOldVersionFile() throws Exception {
+
+        try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1)) {
+            PassData2 passData2 = PassData2ReaderService.fromStream(inputStream, TEST_PASSWORD);
+
+            assertNotNull(passData2);
+            assertEquals(NUM_CATEGORIES, passData2.getCategoryList().size());
+            assertEquals(NUM_NOTES, passData2.getCategoryList().get(0).getNoteList().size());
+        }
+    }
+
 
     @Test
     @Order(10)

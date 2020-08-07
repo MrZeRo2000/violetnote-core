@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * Reads PassData from InputStream version 1
  */
-public class FilePassDataReaderV1 extends FilePassDataReader<PassData> {
+public class FilePassDataReaderV1 extends AbstractFilePassDataReader<PassData> {
     public FilePassDataReaderV1(InputStream inputStream, String password) {
         super(inputStream, password);
     }

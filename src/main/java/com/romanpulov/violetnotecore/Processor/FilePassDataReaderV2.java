@@ -12,7 +12,7 @@ import java.util.Arrays;
 /**
  * Reads PassData2 from InputStream version 2
  */
-public class FilePassDataReaderV2 extends FilePassDataReader<PassData2> {
+public class FilePassDataReaderV2 extends AbstractFilePassDataReader<PassData2> {
     public FilePassDataReaderV2(InputStream inputStream, String password) {
         super(inputStream, password);
     }
