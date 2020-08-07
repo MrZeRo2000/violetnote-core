@@ -115,8 +115,8 @@ public class PassNote2 {
         return system.equals(passNote2.system) &&
                 user.equals(passNote2.user) &&
                 password.equals(passNote2.password) &&
-                ((url == null && passNote2.url == null) || (url != null) && (url.equals(passNote2.url))) &&
-                ((info == null && passNote2.info == null) || (info != null) && (info.equals(passNote2.info)))
+                ((url == null && passNote2.url == null) || ((url != null) && (url.equals(passNote2.url)))) &&
+                ((info == null && passNote2.info == null) || ((info != null) && (info.equals(passNote2.info))))
                 ;
     }
 
