@@ -2,9 +2,11 @@ package com.romanpulov.violetnotecore.AESCrypt;
 
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptConfigurationFactory;
 import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
+import com.romanpulov.violetnotecore.Service.StringCryptService;
 import com.romanpulov.violetnotecore.Utils.HexConverter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -13,8 +15,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by 4540 on 28.01.2016.
@@ -100,15 +101,20 @@ public class TestAESCryptService {
     @Test
     public void testCryptStringMessage() throws Exception {
         System.out.println("testCryptStringMessage start");
-
         String testString = TEST_MESSAGE;
-        String aesEncryptedString = AESCryptService.encryptString(testString, TEST_PASSWORD);
+
+        long startTime = System.nanoTime();
+
+        String aesEncryptedString = StringCryptService.encryptStringAES128(testString, TEST_PASSWORD);
 
         System.out.println("Source string:" + testString);
         System.out.println("Encrypted string AES: " + aesEncryptedString);
 
-        String aesDecryptedString = AESCryptService.decryptString(aesEncryptedString, TEST_PASSWORD);
-        System.out.println("Decrypted string AES:" + aesDecryptedString);
+        String aesDecryptedString = StringCryptService.decryptStringAES128(aesEncryptedString, TEST_PASSWORD);
+
+        long endTime = System.nanoTime();
+
+        System.out.println("Decrypted string AES:" + aesDecryptedString + ", time:" + (endTime - startTime));
 
         assertEquals(testString, aesDecryptedString);
 
@@ -116,14 +122,55 @@ public class TestAESCryptService {
     }
 
     @Test
+    public void testCryptStringMessage256() throws Exception {
+        System.out.println("testCryptStringMessage start");
+        String testString = TEST_MESSAGE;
+
+        long startTime = System.nanoTime();
+
+        String aesEncryptedString = StringCryptService.encryptStringAES256(testString, TEST_PASSWORD);
+
+        System.out.println("Source string:" + testString);
+        System.out.println("Encrypted string AES256: " + aesEncryptedString);
+
+        String aesDecryptedString = StringCryptService.decryptStringAES256(aesEncryptedString, TEST_PASSWORD);
+
+        long endTime = System.nanoTime();
+
+        System.out.println("Decrypted string AES256:" + aesDecryptedString + ", time:" + (endTime - startTime));
+        assertEquals(testString, aesDecryptedString);
+
+        System.out.println("testCryptStringMessage256 finish");
+    }
+
+    @Test
+    public void testDecryptOldString() throws Exception {
+        String testString = TEST_MESSAGE;
+
+        final String aesEncryptedString = StringCryptService.encryptStringAES128(testString, TEST_PASSWORD);
+        final String aesDecryptedString = StringCryptService.decryptString(aesEncryptedString, TEST_PASSWORD);
+
+        assertEquals(testString, aesDecryptedString);
+
+        assertThrows(Exception.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                String aesDecryptedString = StringCryptService.decryptStringAES256(aesEncryptedString, TEST_PASSWORD);
+                fail("Decrypted: " + aesDecryptedString);
+            }
+        });
+
+    }
+
+    @Test
     public void testCryptStringWrongPasswordMessage() throws Exception {
         System.out.println("testCryptStringWrongPasswordMessage start");
 
         String testString = TEST_MESSAGE;
-        String aesEncryptedString = AESCryptService.encryptString(testString, TEST_PASSWORD);
+        String aesEncryptedString = StringCryptService.encryptStringAES128(testString, TEST_PASSWORD);
 
         try {
-            String aesDecryptedString = AESCryptService.decryptString(aesEncryptedString, WRONG_PASSWORD);
+            String aesDecryptedString = StringCryptService.decryptStringAES128(aesEncryptedString, WRONG_PASSWORD);
         } catch (Exception e) {
             System.out.println("Expected exception:" + e.getMessage());
             System.out.println("testCryptStringWrongPasswordMessage finish");
