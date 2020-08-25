@@ -24,7 +24,7 @@ test {
 }
 
 group = 'com.romanpulov'
-version = '2.0.0-SNAPSHOT'
+version = '2.0.1-SNAPSHOT'
 description = 'violetnotecore'
 sourceCompatibility = '1.7'
 

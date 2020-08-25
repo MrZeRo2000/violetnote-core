@@ -44,7 +44,8 @@ public class StringCryptService {
                 decryptedStringAsBytes.write(buffer, 0, length);
             }
 
-            return decryptedStringAsBytes.toString(StandardCharsets.UTF_8.toString());
+            return new String(decryptedStringAsBytes.toByteArray(), StandardCharsets.UTF_8);
+            //return decryptedStringAsBytes.toString(StandardCharsets.UTF_8.toString());
         }
     }
 
