@@ -6,7 +6,9 @@ import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.Service.PassData2ReaderServiceV2;
+import com.romanpulov.violetnotecore.Service.PassData2ReaderServiceV3;
 import com.romanpulov.violetnotecore.Service.PassData2WriterServiceV2;
+import com.romanpulov.violetnotecore.Service.PassData2WriterServiceV3;
 import com.romanpulov.violetnotecore.TestFileManagement;
 import com.romanpulov.violetnotecore.TestPassData2Generator;
 import com.romanpulov.violetnotecore.TestPassDataTools;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestFilePassDataPerformance {
     private static final String TEST_FILE_NAME_1 = "data\\test_performance_out_1.vnf";
     private static final String TEST_FILE_NAME_2 = "data\\test_performance_out_2.vnf";
+    private static final String TEST_FILE_NAME_3 = "data\\test_performance_out_3.vnf";
     private static final String TEST_PASSWORD = "123456";
     private static final int NUM_CATEGORIES = 30;
     private static final int NUM_NOTES = 120;
@@ -129,6 +132,49 @@ public class TestFilePassDataPerformance {
 
     @Test
     @Order(6)
+    public void testWriteServiceFile3() throws Exception {
+        (new TestFileManagement(TEST_FILE_NAME_3)).testDeleteOutputFile();
+
+        try (OutputStream outputStream = new FileOutputStream(new File(TEST_FILE_NAME_3)))
+        {
+            long startTime = System.nanoTime();
+
+            PassData2WriterServiceV3.toStream(outputStream, TEST_PASSWORD, passData2);
+
+            long endTime = System.nanoTime();
+
+            printExecutionTime("Write file service file 3", startTime, endTime);
+        }
+    }
+
+    @Test
+    @Order(7)
+    public void testReadFile3() throws Exception {
+        try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_3))
+        {
+            long startTime = System.nanoTime();
+
+            FilePassDataReaderV3 readerV3 = new FilePassDataReaderV3(inputStream, TEST_PASSWORD);
+            PassData2 readPassData2 = readerV3.readFile();
+
+            long endTime = System.nanoTime();
+            printExecutionTime("Read file 3", startTime, endTime);
+
+            startTime = System.nanoTime();
+
+            String passDataEquals = TestPassDataTools.passDataEquals(passData2, readPassData2);
+            if (passDataEquals != null) {
+                fail(passDataEquals);
+            }
+
+            endTime = System.nanoTime();
+            printExecutionTime("PassData2 equality check", startTime, endTime);
+        }
+    }
+
+
+    @Test
+    @Order(8)
     public void testReadWrongFile() throws Exception {
         assertThrows(DataReadWriteException.class, new Executable() {
             @Override
@@ -157,10 +203,38 @@ public class TestFilePassDataPerformance {
                 }
             }
         });
+
+        assertThrows(DataReadWriteException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_3))
+                {
+                    FilePassDataReaderV2 readerV2 = new FilePassDataReaderV2(inputStream, TEST_PASSWORD);
+                    readerV2.readFile();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+        });
+
+        assertThrows(DataReadWriteException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_3))
+                {
+                    FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(inputStream, TEST_PASSWORD);
+                    readerV1.readFile();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+        });
     }
 
     @Test
-    @Order(7)
+    @Order(9)
     public void testReadOldVersionFile() throws Exception {
 
         PassData2 passData2 = null;
@@ -181,7 +255,7 @@ public class TestFilePassDataPerformance {
     }
 
     @Test
-    @Order(8)
+    @Order(10)
     public void testReadMarkOldVersionFile() throws Exception {
 
         PassData2 passData2;
@@ -208,23 +282,45 @@ public class TestFilePassDataPerformance {
     }
 
     @Test
-    @Order(9)
+    @Order(11)
     public void testReadServiceOldVersionFile() throws Exception {
 
         try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1)) {
-            PassData2 passData2 = PassData2ReaderServiceV2.fromStream(inputStream, TEST_PASSWORD);
+            PassData2 readPassData2 = PassData2ReaderServiceV2.fromStream(inputStream, TEST_PASSWORD);
 
-            assertNotNull(passData2);
-            assertEquals(NUM_CATEGORIES, passData2.getCategoryList().size());
-            assertEquals(NUM_NOTES, passData2.getCategoryList().get(0).getNoteList().size());
+            assertNotNull(readPassData2);
+            assertEquals(NUM_CATEGORIES, readPassData2.getCategoryList().size());
+            assertEquals(NUM_NOTES, readPassData2.getCategoryList().get(0).getNoteList().size());
         }
+
+        try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1)) {
+            PassData2 readPassData2 = PassData2ReaderServiceV3.fromStream(inputStream, TEST_PASSWORD);
+
+            assertNotNull(readPassData2);
+            assertEquals(NUM_CATEGORIES, readPassData2.getCategoryList().size());
+            assertEquals(NUM_NOTES, readPassData2.getCategoryList().get(0).getNoteList().size());
+        }
+
+        try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_2)) {
+            PassData2 readPassData2 = PassData2ReaderServiceV3.fromStream(inputStream, TEST_PASSWORD);
+
+            assertNotNull(readPassData2);
+            assertEquals(NUM_CATEGORIES, readPassData2.getCategoryList().size());
+            assertEquals(NUM_NOTES, readPassData2.getCategoryList().get(0).getNoteList().size());
+
+            String passDataEquals = TestPassDataTools.passDataEquals(passData2, readPassData2);
+            if (passDataEquals != null) {
+                fail(passDataEquals);
+            }
+        }
+
     }
 
-
     @Test
-    @Order(10)
+    @Order(12)
     public void testDeleteOutputFile() throws Exception {
         (new TestFileManagement(TEST_FILE_NAME_1)).testDeleteExistingFile();
         (new TestFileManagement(TEST_FILE_NAME_2)).testDeleteExistingFile();
+        (new TestFileManagement(TEST_FILE_NAME_3)).testDeleteExistingFile();
     }
 }
