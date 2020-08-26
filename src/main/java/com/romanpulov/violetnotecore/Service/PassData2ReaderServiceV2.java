@@ -12,23 +12,28 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class PassData2ReaderService {
+public class PassData2ReaderServiceV2 {
     public static PassData2 fromStream(InputStream inputStream, String password)
-    throws AESCryptException, IOException, DataReadWriteException
+            throws AESCryptException, IOException, DataReadWriteException
     {
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
             bufferedInputStream.mark(10);
 
-            try {
-                FilePassDataReaderV2 readerV2 = new FilePassDataReaderV2(bufferedInputStream, password);
-                return readerV2.readFile();
-            } catch (DataReadWriteException e) {
-                bufferedInputStream.reset();
+            return fromBufferedStream(bufferedInputStream, password);
+        }
+    }
 
-                FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(bufferedInputStream, password);
-                PassData passData = readerV1.readFile();
-                return PassData2Converter.from(passData);
-            }
+    public static PassData2 fromBufferedStream(BufferedInputStream bufferedInputStream, String password)
+            throws AESCryptException, IOException, DataReadWriteException {
+        try {
+            FilePassDataReaderV2 readerV2 = new FilePassDataReaderV2(bufferedInputStream, password);
+            return readerV2.readFile();
+        } catch (DataReadWriteException e2) {
+            bufferedInputStream.reset();
+
+            FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(bufferedInputStream, password);
+            PassData passData = readerV1.readFile();
+            return PassData2Converter.from(passData);
         }
     }
 }

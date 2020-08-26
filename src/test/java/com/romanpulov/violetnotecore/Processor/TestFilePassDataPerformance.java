@@ -5,8 +5,8 @@ import com.romanpulov.violetnotecore.Converter.PassData2Converter;
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
-import com.romanpulov.violetnotecore.Service.PassData2ReaderService;
-import com.romanpulov.violetnotecore.Service.PassData2WriterService;
+import com.romanpulov.violetnotecore.Service.PassData2ReaderServiceV2;
+import com.romanpulov.violetnotecore.Service.PassData2WriterServiceV2;
 import com.romanpulov.violetnotecore.TestFileManagement;
 import com.romanpulov.violetnotecore.TestPassData2Generator;
 import com.romanpulov.violetnotecore.TestPassDataTools;
@@ -94,7 +94,7 @@ public class TestFilePassDataPerformance {
         {
             long startTime = System.nanoTime();
 
-            PassData2WriterService.toStream(outputStream, TEST_PASSWORD, passData2);
+            PassData2WriterServiceV2.toStream(outputStream, TEST_PASSWORD, passData2);
 
             long endTime = System.nanoTime();
 
@@ -212,7 +212,7 @@ public class TestFilePassDataPerformance {
     public void testReadServiceOldVersionFile() throws Exception {
 
         try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1)) {
-            PassData2 passData2 = PassData2ReaderService.fromStream(inputStream, TEST_PASSWORD);
+            PassData2 passData2 = PassData2ReaderServiceV2.fromStream(inputStream, TEST_PASSWORD);
 
             assertNotNull(passData2);
             assertEquals(NUM_CATEGORIES, passData2.getCategoryList().size());
