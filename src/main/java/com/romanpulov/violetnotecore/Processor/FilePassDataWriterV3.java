@@ -8,19 +8,18 @@ import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import java.io.OutputStream;
 
 /**
- * Writes PassData2 to outputStream version 2
+ * Writes PassData2 to outputStream version 3
  */
-public class FilePassDataWriterV2 extends AbstractFilePassDataWriter<PassData2> {
-
-    public FilePassDataWriterV2(OutputStream outputStream, String password, PassData2 passData) {
-        super(outputStream, password, passData);
+public class FilePassDataWriterV3 extends AbstractFilePassDataWriter<PassData2> {
+    public FilePassDataWriterV3(OutputStream outputStream, String password, PassData2 data) {
+        super(outputStream, password, data);
         this.header = FILE_DATA_SIGNATURE;
-        this.version = new byte[] {0, 2};
+        this.version = new byte[] {0, 3};
     }
 
     @Override
     protected AESCryptService createCryptService() {
-        return new AESCryptService(AESCryptConfigurationFactory.createAES128());
+        return new AESCryptService(AESCryptConfigurationFactory.createAES256());
     }
 
     @Override

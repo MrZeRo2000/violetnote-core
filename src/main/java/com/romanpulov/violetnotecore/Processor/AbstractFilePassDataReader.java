@@ -6,6 +6,7 @@ import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public abstract class AbstractFilePassDataReader<T> extends AbstractFileDataProcessor {
 
@@ -17,9 +18,35 @@ public abstract class AbstractFilePassDataReader<T> extends AbstractFileDataProc
         this.password = password;
     }
 
-    protected void readHeader() throws IOException, DataReadWriteException {}
+    protected void readHeader() throws IOException, DataReadWriteException {
+        if (this.header != null) {
+            byte[] readHeader = new byte[this.header.length];
+            int bytes = inputStream.read(readHeader);
 
-    protected void readVersion() throws IOException, DataReadWriteException {}
+            if (bytes != this.header.length) {
+                throw new DataReadWriteException("Error reading header: wrong header length");
+            }
+
+            if (!Arrays.equals(readHeader, this.header)) {
+                throw new DataReadWriteException("Error reading header: wrong header");
+            }
+        }
+    }
+
+    protected void readVersion() throws IOException, DataReadWriteException {
+        if (this.version != null) {
+            byte[] readVersion = new byte[2];
+            int bytes = inputStream.read(readVersion);
+
+            if (bytes != this.version.length) {
+                throw new DataReadWriteException("Error reading version: wrong version length");
+            }
+
+            if (!Arrays.equals(readVersion, version)) {
+                throw new DataReadWriteException("Error reading version: wrong version:" + Arrays.toString(version));
+            }
+        }
+    }
 
     public final T readFile() throws AESCryptException, IOException, DataReadWriteException {
         readHeader();

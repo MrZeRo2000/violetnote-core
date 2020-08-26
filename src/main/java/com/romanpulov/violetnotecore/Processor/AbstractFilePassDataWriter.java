@@ -20,9 +20,18 @@ public abstract class AbstractFilePassDataWriter<T> extends AbstractFileDataProc
         this.data = data;
     }
 
-    protected void writeHeader() throws IOException {}
+    protected void writeHeader() throws IOException {
+        if (this.header != null) {
+            outputStream.write(this.header);
+        }
 
-    protected void writeVersion() throws IOException {}
+    }
+
+    protected void writeVersion() throws IOException {
+        if (this.version != null) {
+            outputStream.write(this.version);
+        }
+    }
 
     @Override
     protected AESCryptService createCryptService() {
