@@ -24,7 +24,7 @@ test {
 }
 
 group = 'com.romanpulov'
-version = '2.0.4'
+version = '2.0.5'
 description = 'violetnotecore'
 sourceCompatibility = '1.7'
 

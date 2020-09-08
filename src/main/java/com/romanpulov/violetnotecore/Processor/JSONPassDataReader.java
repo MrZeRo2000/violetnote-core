@@ -33,8 +33,8 @@ public class JSONPassDataReader extends JSONDataProcessor {
     public List<PassNote2> readPassNoteList(JSONArray ja) {
         List<PassNote2> passNoteList = new ArrayList<>(ja.length());
 
-        for (Object o: ja) {
-            JSONObject jo = (JSONObject) o;
+        for (int i = 0; i < ja.length(); i++) {
+            JSONObject jo = (JSONObject) ja.get(i);
             passNoteList.add(readPassNote(jo));
         }
 
@@ -51,9 +51,10 @@ public class JSONPassDataReader extends JSONDataProcessor {
     public List<PassCategory2> readPassCategoryList(JSONArray ja) {
         List<PassCategory2> passCategoryList = new ArrayList<>(ja.length());
 
-        for (Object o: ja) {
-            JSONObject jo = (JSONObject) o;
+        for (int i = 0; i < ja.length(); i++) {
+            JSONObject jo = (JSONObject) ja.get(i);
             passCategoryList.add(readPassCategory(jo));
+
         }
 
         return passCategoryList;
@@ -65,10 +66,18 @@ public class JSONPassDataReader extends JSONDataProcessor {
     }
 
     public PassData2 readStream(InputStream inputStream) throws DataReadWriteException {
-        try {
-            JSONObject jo = new JSONObject(new JSONTokener(inputStream));
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            // get data as string
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, length);
+            }
+            byte[] bytes = outputStream.toByteArray();
+
+            JSONObject jo = new JSONObject(new JSONTokener(new String(bytes, StandardCharsets.UTF_8)));
             return readPassData(jo);
-        } catch (JSONException e) {
+        } catch (JSONException | IOException e) {
             throw new DataReadWriteException(e.getMessage());
         }
     }
