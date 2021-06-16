@@ -8,7 +8,7 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -24,7 +24,7 @@ test {
 }
 
 group = 'com.romanpulov'
-version = '2.0.5'
+version = '2.0.6'
 description = 'violetnotecore'
 sourceCompatibility = '1.7'
 
