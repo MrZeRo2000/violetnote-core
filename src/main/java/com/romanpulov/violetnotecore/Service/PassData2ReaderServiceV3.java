@@ -20,7 +20,11 @@ public class PassData2ReaderServiceV3 {
                 FilePassDataReaderV3 readerV3 = new FilePassDataReaderV3(bufferedInputStream, password);
                 return readerV3.readFile();
             } catch (DataReadWriteException e3) {
-                bufferedInputStream.reset();
+                try {
+                    bufferedInputStream.reset();
+                } catch (IOException e31) {
+                    throw e3;
+                }
 
                 return PassData2ReaderServiceV2.fromBufferedStream(bufferedInputStream, password);
             }

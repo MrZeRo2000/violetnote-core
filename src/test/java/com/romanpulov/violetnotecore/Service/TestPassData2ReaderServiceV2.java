@@ -1,20 +1,24 @@
-package com.romanpulov.violetnotecore.Processor;
+package com.romanpulov.violetnotecore.Service;
 
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
+import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV2;
+import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV2;
+import com.romanpulov.violetnotecore.Processor.TestFilePassDataWriter;
 import com.romanpulov.violetnotecore.TestFileManagement;
 import com.romanpulov.violetnotecore.TestPassData2Generator;
-import com.romanpulov.violetnotecore.TestPassDataTools;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
-import java.io.*;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestFilePassDataReaderWriterV2 {
+public class TestPassData2ReaderServiceV2 {
     private static final String TEST_FILE_NAME_V1 = "data\\test1.vnf";
     private static final String TEST_FILE_NAME = "data\\test_out.vn2";
     private static final String TEST_PASSWORD = "1#23T44rr6";
@@ -38,51 +42,28 @@ public class TestFilePassDataReaderWriterV2 {
 
     @Test
     @Order(2)
-    public void testReadWrittenFile() throws Exception {
-
-        try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME))
-        {
-            FilePassDataReaderV2 reader = new FilePassDataReaderV2(inputStream, TEST_PASSWORD);
-
-            PassData2 readPassData = reader.readFile();
-            PassData2 passData = TestPassData2Generator.generateTestPassData2();
-
-            String passDataComparison = TestPassDataTools.passDataEquals(passData, readPassData);
-            if (passDataComparison != null) {
-                fail(passDataComparison);
+    public void testReadWrongPasswordFile()  throws Exception {
+        assertThrows(DataReadWriteException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                PassData2 readPassData = PassData2ReaderServiceV2.fromStream(new FileInputStream(TEST_FILE_NAME), TEST_WRONG_PASSWORD);
             }
-
-        }
+        });
     }
 
     @Test
     @Order(3)
     public void testReadWrongVersionFile() throws Exception {
-        final FilePassDataReaderV2 reader = new FilePassDataReaderV2(new FileInputStream(TEST_FILE_NAME_V1), TEST_PASSWORD);
-
         assertThrows(DataReadWriteException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
-                PassData2 readPassData = reader.readFile();
+                PassData2 readPassData = PassData2ReaderServiceV2.fromStream(new FileInputStream(TEST_FILE_NAME_V1), TEST_PASSWORD);
             }
         });
     }
 
     @Test
     @Order(4)
-    public void testReadWrongPasswordFile() throws Exception {
-        final FilePassDataReaderV2 reader = new FilePassDataReaderV2(new FileInputStream(TEST_FILE_NAME), TEST_WRONG_PASSWORD);
-
-        assertThrows(DataReadWriteException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                PassData2 readPassData = reader.readFile();
-            }
-        });
-    }
-
-    @Test
-    @Order(5)
     public void testDeleteOutputFile() throws Exception {
         (new TestFileManagement(TEST_FILE_NAME)).testDeleteExistingFile();
     }

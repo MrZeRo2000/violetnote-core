@@ -29,7 +29,11 @@ public class PassData2ReaderServiceV2 {
             FilePassDataReaderV2 readerV2 = new FilePassDataReaderV2(bufferedInputStream, password);
             return readerV2.readFile();
         } catch (DataReadWriteException e2) {
-            bufferedInputStream.reset();
+            try {
+                bufferedInputStream.reset();
+            } catch (IOException e21) {
+                throw e2;
+            }
 
             FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(bufferedInputStream, password);
             PassData passData = readerV1.readFile();
