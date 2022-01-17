@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     implementation ('org.json:json:20200518')
-    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
+    testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
 }
 
 test {
@@ -24,9 +24,9 @@ test {
 }
 
 group = 'com.romanpulov'
-version = '2.0.7'
+version = '2.0.8'
 description = 'violetnotecore'
-sourceCompatibility = '1.7'
+sourceCompatibility = '11'
 
 publishing {
     publications {
