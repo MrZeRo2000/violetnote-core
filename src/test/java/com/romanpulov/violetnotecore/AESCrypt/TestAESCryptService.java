@@ -1,19 +1,13 @@
 package com.romanpulov.violetnotecore.AESCrypt;
 
-import com.romanpulov.violetnotecore.AESCrypt.AESCryptConfigurationFactory;
-import com.romanpulov.violetnotecore.AESCrypt.AESCryptService;
 import com.romanpulov.violetnotecore.Service.StringCryptService;
 import com.romanpulov.violetnotecore.Utils.HexConverter;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,6 +21,7 @@ public class TestAESCryptService {
     private static final String WRONG_PASSWORD = "p1ssword";
     private static final String TEST_MESSAGE = "This is a test message";
 
+    @Test
     public void testWriteIV() throws Exception {
         FileOutputStream streamIV = new FileOutputStream(TEST_IV_FILE_NAME);
         AESCryptService s = new AESCryptService();
@@ -42,12 +37,12 @@ public class TestAESCryptService {
 
         AESCryptService encrypt = new AESCryptService();
         encrypt.generateEncryptCipher(TEST_PASSWORD);
-        byte[] ciphertext = encrypt.getCipher().doFinal("Hello, World!".getBytes("UTF-8"));
+        byte[] ciphertext = encrypt.getCipher().doFinal("Hello, World!".getBytes(StandardCharsets.UTF_8));
         System.out.println("cipherText=" + HexConverter.bytesToHex(ciphertext));
 
         AESCryptService decrypt = new AESCryptService();
         decrypt.generateDecryptCipher(TEST_PASSWORD, encrypt.getSalt(), encrypt.getIv());
-        String plaintext = new String(decrypt.getCipher().doFinal(ciphertext), "UTF-8");
+        String plaintext = new String(decrypt.getCipher().doFinal(ciphertext), StandardCharsets.UTF_8);
         System.out.println("plainText=" + plaintext);
 
         System.out.println("testStringMessage finish");
@@ -64,18 +59,18 @@ public class TestAESCryptService {
         stream.write(s.getSalt());
         stream.write(s.getIv());
         CipherOutputStream cipherStream = new CipherOutputStream(stream, s.getCipher());
-        cipherStream.write(TEST_MESSAGE.getBytes("UTF-8"));
+        cipherStream.write(TEST_MESSAGE.getBytes(StandardCharsets.UTF_8));
         cipherStream.flush();
         cipherStream.close();
         stream.flush();
         stream.close();
 
-        FileInputStream inStream = new FileInputStream(TEST_STREAM_FILE_NAME);
+        DataInputStream inStream = new DataInputStream(new FileInputStream(TEST_STREAM_FILE_NAME));
         byte[] inSalt = new byte[8];
-        inStream.read(inSalt, 0, 8);
+        inStream.readFully(inSalt);
         assertArrayEquals(s.getSalt(), inSalt);
         byte[] inIv = new byte[16];
-        inStream.read(inIv, 0, 16);
+        inStream.readFully(inIv);
         assertArrayEquals(s.getIv(), inIv);
 
         AESCryptService inCipher = new AESCryptService();
@@ -93,7 +88,7 @@ public class TestAESCryptService {
         os.flush();
         inStream.close();
         os.close();
-        assertEquals(os.toString(), TEST_MESSAGE);
+        assertEquals(TEST_MESSAGE, os.toString());
 
         System.out.println("testWriteReadMessage finish");
     }
@@ -152,12 +147,9 @@ public class TestAESCryptService {
 
         assertEquals(testString, aesDecryptedString);
 
-        assertThrows(Exception.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                String aesDecryptedString = StringCryptService.decryptStringAES256(aesEncryptedString, TEST_PASSWORD);
-                fail("Decrypted: " + aesDecryptedString);
-            }
+        assertThrows(Exception.class, () -> {
+            String aesDecryptedString1 = StringCryptService.decryptStringAES256(aesEncryptedString, TEST_PASSWORD);
+            fail("Decrypted: " + aesDecryptedString1);
         });
 
     }
@@ -166,11 +158,14 @@ public class TestAESCryptService {
     public void testCryptStringWrongPasswordMessage() throws Exception {
         System.out.println("testCryptStringWrongPasswordMessage start");
 
-        String testString = TEST_MESSAGE;
-        String aesEncryptedString = StringCryptService.encryptStringAES128(testString, TEST_PASSWORD);
-
         try {
-            String aesDecryptedString = StringCryptService.decryptStringAES128(aesEncryptedString, WRONG_PASSWORD);
+            // A wrong password may not fail: ~1/256 of the time the random final
+            // block decrypts to valid PKCS#5 padding and doFinal() returns garbage.
+            // Re-encrypt each iteration for a fresh salt/IV so trials are independent.
+            for(int i = 0; i < 20; i++) {
+                String aesEncryptedString = StringCryptService.encryptStringAES128(TEST_MESSAGE, TEST_PASSWORD);
+                StringCryptService.decryptStringAES128(aesEncryptedString, WRONG_PASSWORD);
+            }
         } catch (Exception e) {
             System.out.println("Expected exception:" + e.getMessage());
             System.out.println("testCryptStringWrongPasswordMessage finish");

@@ -19,6 +19,8 @@ java {
 dependencies {
     implementation ('org.json:json:20231013')
     testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
+    // Gradle 9 no longer adds the launcher automatically
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 test {
@@ -29,7 +31,7 @@ test {
 }
 
 group = 'com.romanpulov'
-version = '2.1.4'
+version = '2.1.5'
 description = 'violetnotecore'
 
 publishing {
