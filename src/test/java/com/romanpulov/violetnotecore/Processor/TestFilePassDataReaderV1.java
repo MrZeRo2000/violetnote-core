@@ -1,17 +1,13 @@
 package com.romanpulov.violetnotecore.Processor;
 
-import com.romanpulov.violetnotecore.Processor.FilePassDataReaderV1;
-import com.romanpulov.violetnotecore.Processor.TestFilePassDataReader;
+import com.romanpulov.violetnotecore.TestConfiguration;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 public class TestFilePassDataReaderV1 {
-    private static final String TEST_FILE_NAME = "data\\test1.vnf";
+    private static final String TEST_FILE_NAME = TestConfiguration.resolveTestFileName("test1.vnf");
     private static final String TEST_PASSWORD = "123456";
     private static final String WRONG_PASSWORD = "1023456";
 

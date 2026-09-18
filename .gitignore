@@ -1,8 +1,6 @@
 /target/
 *.iml
 /.idea/
-/data/*test*.xml
-/data/*test*.bin
 
 # gradle
 .gradle/

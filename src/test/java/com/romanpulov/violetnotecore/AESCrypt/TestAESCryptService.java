@@ -1,7 +1,10 @@
 package com.romanpulov.violetnotecore.AESCrypt;
 
 import com.romanpulov.violetnotecore.Service.StringCryptService;
+import com.romanpulov.violetnotecore.TestConfiguration;
+import com.romanpulov.violetnotecore.TestUtils;
 import com.romanpulov.violetnotecore.Utils.HexConverter;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.CipherInputStream;
@@ -15,11 +18,17 @@ import static org.junit.jupiter.api.Assertions.*;
  * Created by 4540 on 28.01.2016.
  */
 public class TestAESCryptService {
-    private static final String TEST_STREAM_FILE_NAME = "data\\stream_test.bin";
-    private static final String TEST_IV_FILE_NAME = "data\\stream_test.bin";
+    private static final String TEST_STREAM_FILE_NAME = TestConfiguration.resolveTestFileName("stream_test.bin");
+    private static final String TEST_IV_FILE_NAME = TestConfiguration.resolveTestFileName("stream_test.bin");
     private static final String TEST_PASSWORD = "password1";
     private static final String WRONG_PASSWORD = "p1ssword";
     private static final String TEST_MESSAGE = "This is a test message";
+
+    @AfterAll
+    static void afterAll() {
+        TestUtils.deleteFileIfExists(TEST_STREAM_FILE_NAME);
+        TestUtils.deleteFileIfExists(TEST_IV_FILE_NAME);
+    }
 
     @Test
     public void testWriteIV() throws Exception {
