@@ -18,6 +18,7 @@ public class TestFilePassDataReaderWriterV3 {
     private static final String TEST_FILE_NAME_V1 = TestConfiguration.resolveTestFileName("test1.vnf");
     private static final String TEST_FILE_NAME = TestConfiguration.resolveTestFileName("test_out.vn3");
     private static final String TEST_PASSWORD = "1#23Yffuy8";
+    private static final String TEST_WRONG_PASSWORD = "eid,93";
 
     @AfterAll
     static void afterAll() {
@@ -62,8 +63,21 @@ public class TestFilePassDataReaderWriterV3 {
     @Test
     @Order(3)
     public void testReadWrongVersionFile() throws Exception {
-        final FilePassDataReaderV3 reader = new FilePassDataReaderV3(new FileInputStream(TEST_FILE_NAME_V1), TEST_PASSWORD);
+        try(InputStream inputStream = new FileInputStream(TEST_FILE_NAME_V1)) {
+            final FilePassDataReaderV3 reader = new FilePassDataReaderV3(inputStream, TEST_PASSWORD);
 
-        assertThrows(DataReadWriteException.class, reader::readFile);
+            assertThrows(DataReadWriteException.class, reader::readFile);
+        }
+    }
+
+    @Test
+    @Order(4)
+    public void testReadWrongPasswordFile() throws Exception {
+        try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME))
+        {
+            final FilePassDataReaderV3 reader = new FilePassDataReaderV3(inputStream, TEST_WRONG_PASSWORD);
+
+            assertThrows(DataReadWriteException.class, reader::readFile);
+        }
     }
 }
