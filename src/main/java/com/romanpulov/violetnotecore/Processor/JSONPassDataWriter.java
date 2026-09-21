@@ -1,5 +1,6 @@
 package com.romanpulov.violetnotecore.Processor;
 
+import com.romanpulov.violetnotecore.Model.Attribute;
 import com.romanpulov.violetnotecore.Model.PassCategory2;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Model.PassNote2;
@@ -21,7 +22,8 @@ public class JSONPassDataWriter extends JSONDataProcessor {
     }
 
     public JSONObject writePassNote(PassNote2 passNote) {
-        return new JSONObject()
+        // core
+        JSONObject jo = new JSONObject()
                 .putOpt(PassNote2.ATTR_SYSTEM, passNote.getSystem())
                 .putOpt(PassNote2.ATTR_USER, passNote.getUser())
                 .putOpt(PassNote2.ATTR_PASSWORD, passNote.getPassword())
@@ -30,6 +32,26 @@ public class JSONPassDataWriter extends JSONDataProcessor {
                 .putOpt(PassNote2.ATTR_CREATED_DATE, formatDate(passNote.getCreatedDate()))
                 .putOpt(PassNote2.ATTR_MODIFIED_DATE, formatDate(passNote.getModifiedDate()))
                 ;
+
+        // attributes
+        if ((passNote.getAttributes() != null) && !passNote.getAttributes().isEmpty()) {
+            JSONArray ja = new JSONArray();
+            for (Attribute attribute : passNote.getAttributes()) {
+                if ((attribute.name() != null) &&
+                        (attribute.value() != null) &&
+                        !attribute.name().isBlank() &&
+                        !attribute.value().isBlank()) {
+                    ja.put(
+                            new JSONObject()
+                                    .put(Attribute.ATTR_NAME, attribute.name())
+                                    .put(Attribute.ATTR_VALUE, attribute.value())
+                    );
+                }
+            }
+            jo.put(PassNote2.ATTR_ATTRIBUTES, ja);
+        }
+
+        return jo;
     }
 
     public JSONArray writePassNoteList(List<PassNote2> passNoteList) {

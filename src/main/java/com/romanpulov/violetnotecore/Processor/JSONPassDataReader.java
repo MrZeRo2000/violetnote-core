@@ -1,9 +1,6 @@
 package com.romanpulov.violetnotecore.Processor;
 
-import com.romanpulov.violetnotecore.Model.PassCategory;
-import com.romanpulov.violetnotecore.Model.PassCategory2;
-import com.romanpulov.violetnotecore.Model.PassData2;
-import com.romanpulov.violetnotecore.Model.PassNote2;
+import com.romanpulov.violetnotecore.Model.*;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +8,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +15,8 @@ import java.util.List;
 public class JSONPassDataReader extends JSONDataProcessor {
 
     public PassNote2 readPassNote(JSONObject jo) {
-        return new PassNote2(
+        // core
+        PassNote2 passNote2 = new PassNote2(
                 jo.optString(PassNote2.ATTR_SYSTEM, null),
                 jo.optString(PassNote2.ATTR_USER, null),
                 jo.optString(PassNote2.ATTR_PASSWORD, null),
@@ -28,6 +25,28 @@ public class JSONPassDataReader extends JSONDataProcessor {
                 parseDate(jo.optString(PassNote2.ATTR_CREATED_DATE, null)),
                 parseDate(jo.optString(PassNote2.ATTR_MODIFIED_DATE, null))
         );
+
+        // attributes
+        JSONArray ja = jo.optJSONArray(PassNote2.ATTR_ATTRIBUTES, null);
+        if (ja != null) {
+            List<Attribute> attributes = new ArrayList<>();
+
+            for (int i = 0; i < ja.length(); i++) {
+                JSONObject jat = ja.optJSONObject(i, null);
+                if (jat != null) {
+                    String attr_name = jat.optString(Attribute.ATTR_NAME, null);
+                    String attr_value = jat.optString(Attribute.ATTR_VALUE, null);
+                    if (attr_name != null && attr_value != null) {
+                        attributes.add(new Attribute(attr_name, attr_value));
+                    }
+                }
+            }
+            if (!attributes.isEmpty()) {
+                passNote2.setAttributes(attributes);
+            }
+        }
+
+        return  passNote2;
     }
 
     public List<PassNote2> readPassNoteList(JSONArray ja) {
@@ -73,9 +92,8 @@ public class JSONPassDataReader extends JSONDataProcessor {
             while ((length = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, length);
             }
-            byte[] bytes = outputStream.toByteArray();
 
-            JSONObject jo = new JSONObject(new JSONTokener(new String(bytes, StandardCharsets.UTF_8)));
+            JSONObject jo = new JSONObject(new JSONTokener(outputStream.toString(StandardCharsets.UTF_8)));
             return readPassData(jo);
         } catch (JSONException | IOException e) {
             throw new DataReadWriteException(e.getMessage());

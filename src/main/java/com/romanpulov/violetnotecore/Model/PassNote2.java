@@ -1,6 +1,7 @@
 package com.romanpulov.violetnotecore.Model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class PassNote2 {
@@ -12,6 +13,7 @@ public class PassNote2 {
     public final static String ATTR_INFO = "info";
     public final static String ATTR_CREATED_DATE = "created date";
     public final static String ATTR_MODIFIED_DATE = "modified date";
+    public final static String ATTR_ATTRIBUTES  = "attributes";
 
     private String system;
 
@@ -26,6 +28,8 @@ public class PassNote2 {
     private Date createdDate;
 
     private Date modifiedDate;
+
+    private List<Attribute> attributes;
 
     public String getSystem() {
         return system;
@@ -83,6 +87,14 @@ public class PassNote2 {
         this.modifiedDate = modifiedDate;
     }
 
+    public List<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<Attribute> attributes) {
+        this.attributes = attributes;
+    }
+
     public static PassNote2 createEmpty() {
         return new PassNote2(
                 null,
@@ -116,8 +128,8 @@ public class PassNote2 {
                 user.equals(passNote2.user) &&
                 password.equals(passNote2.password) &&
                 ((url == null && passNote2.url == null) || ((url != null) && (url.equals(passNote2.url)))) &&
-                ((info == null && passNote2.info == null) || ((info != null) && (info.equals(passNote2.info))))
-                ;
+                ((info == null && passNote2.info == null) || ((info != null) && (info.equals(passNote2.info)))) &&
+                ((attributes == null && passNote2.attributes == null) || ((attributes != null) && (attributes.equals(passNote2.attributes))));
     }
 
     @Override
@@ -128,13 +140,14 @@ public class PassNote2 {
     @Override
     public String toString() {
         return "PassNote2{" +
-                "system='" + system + '\'' +
-                ", user='" + user + '\'' +
-                ", password='" + password + '\'' +
-                ", url='" + url + '\'' +
-                ", info='" + info + '\'' +
-                ", createdDate=" + createdDate +
-                ", modifiedDate=" + modifiedDate +
+                "system='" + getSystem() + '\'' +
+                ", user='" + getUser() + '\'' +
+                ", password='" + getPassword() + '\'' +
+                ", url='" + getUrl() + '\'' +
+                ", info='" + getInfo() + '\'' +
+                ", createdDate=" + getCreatedDate() +
+                ", modifiedDate=" + getModifiedDate() +
+                (Objects.isNull(attributes) ? ", no attributes" :", attributes=" + getAttributes()) +
                 '}';
     }
 
