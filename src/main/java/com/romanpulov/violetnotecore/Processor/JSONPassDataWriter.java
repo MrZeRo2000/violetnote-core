@@ -1,9 +1,6 @@
 package com.romanpulov.violetnotecore.Processor;
 
-import com.romanpulov.violetnotecore.Model.Attribute;
-import com.romanpulov.violetnotecore.Model.PassCategory2;
-import com.romanpulov.violetnotecore.Model.PassData2;
-import com.romanpulov.violetnotecore.Model.PassNote2;
+import com.romanpulov.violetnotecore.Model.*;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteIOException;
 import org.json.JSONArray;
@@ -36,15 +33,15 @@ public class JSONPassDataWriter extends JSONDataProcessor {
         // attributes
         if ((passNote.getAttributes() != null) && !passNote.getAttributes().isEmpty()) {
             JSONArray ja = new JSONArray();
-            for (Attribute attribute : passNote.getAttributes()) {
+            for (PassDataAttribute attribute : passNote.getAttributes()) {
                 if ((attribute.name() != null) &&
                         (attribute.value() != null) &&
                         !attribute.name().isBlank() &&
                         !attribute.value().isBlank()) {
                     ja.put(
                             new JSONObject()
-                                    .put(Attribute.ATTR_NAME, attribute.name())
-                                    .put(Attribute.ATTR_VALUE, attribute.value())
+                                    .put(PassDataAttribute.ATTR_NAME, attribute.name())
+                                    .put(PassDataAttribute.ATTR_VALUE, attribute.value())
                     );
                 }
             }

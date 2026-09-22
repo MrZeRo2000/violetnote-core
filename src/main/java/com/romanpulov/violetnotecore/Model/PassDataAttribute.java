@@ -2,14 +2,14 @@ package com.romanpulov.violetnotecore.Model;
 
 import java.util.Objects;
 
-public final class Attribute {
-    public static final String ATTR_NAME = "name";
-    public static final String ATTR_VALUE = "value";
+public final class PassDataAttribute {
+    public static final String ATTR_NAME = "n";
+    public static final String ATTR_VALUE = "v";
 
     private final String name;
     private final String value;
 
-    public Attribute(String name, String value) {
+    public PassDataAttribute(String name, String value) {
         this.name = name;
         this.value = value;
     }
@@ -24,14 +24,14 @@ public final class Attribute {
 
     @Override
     public String toString() {
-        return "Attribute{name='" + name + "', value='" + value + "'}";
+        return "PassDataAttribute{name='" + name + "', value='" + value + "'}";
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Attribute)) return false;
-        Attribute other = (Attribute) o;
+        if (!(o instanceof PassDataAttribute)) return false;
+        PassDataAttribute other = (PassDataAttribute) o;
         return java.util.Objects.equals(name, other.name)
                 && java.util.Objects.equals(value, other.value);
     }

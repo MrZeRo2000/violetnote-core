@@ -1,8 +1,8 @@
 package com.romanpulov.violetnotecore;
 
-import com.romanpulov.violetnotecore.Model.Attribute;
 import com.romanpulov.violetnotecore.Model.PassCategory2;
 import com.romanpulov.violetnotecore.Model.PassData2;
+import com.romanpulov.violetnotecore.Model.PassDataAttribute;
 import com.romanpulov.violetnotecore.Model.PassNote2;
 
 import java.util.ArrayList;
@@ -75,8 +75,8 @@ public class TestPassData2Generator {
 
         PassNote2 passNote12 = new PassNote2("System 2", "User 2", "Password 2", "URL 2", "Info 2", null, null);
         passNote12.setAttributes(List.of(
-                new Attribute("Personal account", "03344"),
-                new Attribute("Alias", "Navy")
+                new PassDataAttribute("Personal account", "03344"),
+                new PassDataAttribute("Alias", "Navy")
         ));
 
         passNoteList1.add(passNote12);
@@ -97,5 +97,4 @@ public class TestPassData2Generator {
 
         return new PassData2(passCategoryList);
     }
-
 }

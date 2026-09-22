@@ -29,7 +29,7 @@ public class PassNote2 {
 
     private Date modifiedDate;
 
-    private List<Attribute> attributes;
+    private List<PassDataAttribute> attributes;
 
     public String getSystem() {
         return system;
@@ -87,12 +87,12 @@ public class PassNote2 {
         this.modifiedDate = modifiedDate;
     }
 
-    public List<Attribute> getAttributes() {
+    public List<PassDataAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<Attribute> attributes) {
-        this.attributes = attributes;
+    public void setAttributes(List<PassDataAttribute> passDataAttributes) {
+        this.attributes = passDataAttributes;
     }
 
     public static PassNote2 createEmpty() {
@@ -147,7 +147,7 @@ public class PassNote2 {
                 ", info='" + getInfo() + '\'' +
                 ", createdDate=" + getCreatedDate() +
                 ", modifiedDate=" + getModifiedDate() +
-                (Objects.isNull(attributes) ? ", no attributes" :", attributes=" + getAttributes()) +
+                (Objects.isNull(attributes) ? ", no passDataAttributes" :", passDataAttributes=" + getAttributes()) +
                 '}';
     }
 

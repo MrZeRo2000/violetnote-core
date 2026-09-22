@@ -29,20 +29,20 @@ public class JSONPassDataReader extends JSONDataProcessor {
         // attributes
         JSONArray ja = jo.optJSONArray(PassNote2.ATTR_ATTRIBUTES, null);
         if (ja != null) {
-            List<Attribute> attributes = new ArrayList<>();
+            List<PassDataAttribute> passDataAttributes = new ArrayList<>();
 
             for (int i = 0; i < ja.length(); i++) {
                 JSONObject jat = ja.optJSONObject(i, null);
                 if (jat != null) {
-                    String attr_name = jat.optString(Attribute.ATTR_NAME, null);
-                    String attr_value = jat.optString(Attribute.ATTR_VALUE, null);
+                    String attr_name = jat.optString(PassDataAttribute.ATTR_NAME, null);
+                    String attr_value = jat.optString(PassDataAttribute.ATTR_VALUE, null);
                     if (attr_name != null && attr_value != null) {
-                        attributes.add(new Attribute(attr_name, attr_value));
+                        passDataAttributes.add(new PassDataAttribute(attr_name, attr_value));
                     }
                 }
             }
-            if (!attributes.isEmpty()) {
-                passNote2.setAttributes(attributes);
+            if (!passDataAttributes.isEmpty()) {
+                passNote2.setAttributes(passDataAttributes);
             }
         }
 

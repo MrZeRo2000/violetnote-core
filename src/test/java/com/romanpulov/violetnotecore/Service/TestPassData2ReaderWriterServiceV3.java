@@ -1,6 +1,6 @@
 package com.romanpulov.violetnotecore.Service;
 
-import com.romanpulov.violetnotecore.Model.Attribute;
+import com.romanpulov.violetnotecore.Model.PassDataAttribute;
 import com.romanpulov.violetnotecore.Model.PassCategory2;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Model.PassNote2;
@@ -60,11 +60,11 @@ public class TestPassData2ReaderWriterServiceV3 {
             PassNote2 n12 = c1.getNoteList().get(1);
             assertEquals(2, n12.getAttributes().size());
 
-            Attribute a1 =  n12.getAttributes().get(0);
+            PassDataAttribute a1 =  n12.getAttributes().get(0);
             assertEquals("Personal account", a1.name());
             assertEquals("03344", a1.value());
 
-            Attribute a2 =  n12.getAttributes().get(1);
+            PassDataAttribute a2 =  n12.getAttributes().get(1);
             assertEquals("Alias", a2.name());
             assertEquals("Navy", a2.value());
 
