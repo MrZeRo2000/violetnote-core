@@ -4,7 +4,7 @@ import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
 import com.romanpulov.violetnotecore.TestConfiguration;
 import com.romanpulov.violetnotecore.TestPassData2Generator;
-import com.romanpulov.violetnotecore.TestPassDataTools;
+import com.romanpulov.violetnotecore.TestPassData2Tools;
 import com.romanpulov.violetnotecore.TestUtils;
 import org.junit.jupiter.api.*;
 
@@ -52,7 +52,7 @@ public class TestFilePassDataReaderWriterV3 {
             PassData2 readPassData = reader.readFile();
             PassData2 passData = TestPassData2Generator.generateTestPassData2();
 
-            String passDataComparison = TestPassDataTools.passDataEquals(passData, readPassData);
+            String passDataComparison = TestPassData2Tools.passDataEquals(passData, readPassData);
             if (passDataComparison != null) {
                 fail(passDataComparison);
             }

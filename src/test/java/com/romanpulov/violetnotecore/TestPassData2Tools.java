@@ -1,0 +1,33 @@
+package com.romanpulov.violetnotecore;
+
+import com.romanpulov.violetnotecore.Model.*;
+
+public class TestPassData2Tools {
+    public static String passDataEquals(PassData2 passData1, PassData2 passData2) {
+        if ((passData1 == null) || (passData2 == null)) {
+            return "Null passData1 or passData2";
+        }
+
+        if (passData1.getCategoryList().size() != passData2.getCategoryList().size()) {
+            return "Category list size not match";
+        }
+
+        for (int i = 0; i < passData1.getCategoryList().size(); i++) {
+            if (!passData1.getCategoryList().get(i).equals(passData2.getCategoryList().get(i))) {
+                return "Category " + i + " not matching(" + passData1.getCategoryList().get(i) + ")";
+            }
+
+            if (passData1.getCategoryList().get(i).getNoteList().size() != passData2.getCategoryList().get(i).getNoteList().size()) {
+                return "Note list size for category " + passData1.getCategoryList().get(i) + " not matching";
+            }
+
+            for (int j = 0; j < passData1.getCategoryList().get(i).getNoteList().size(); j++) {
+                if (!passData1.getCategoryList().get(i).getNoteList().get(j).equals(passData2.getCategoryList().get(i).getNoteList().get(j))){
+                    return "Note for category " + passData1.getCategoryList().get(i) + " not matching:" + passData1.getCategoryList().get(i).getNoteList().get(j);
+                }
+            }
+        }
+
+        return null;
+    }
+}

@@ -1,7 +1,8 @@
 package com.romanpulov.violetnotecore.Processor;
 
 
-import com.romanpulov.violetnotecore.Converter.PassData2Converter;
+import com.romanpulov.violetnotecore.*;
+import com.romanpulov.violetnotecore.Service.PassData2ConverterService;
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.Model.PassData2;
 import com.romanpulov.violetnotecore.Processor.Exception.DataReadWriteException;
@@ -9,10 +10,6 @@ import com.romanpulov.violetnotecore.Service.PassData2ReaderServiceV2;
 import com.romanpulov.violetnotecore.Service.PassData2ReaderServiceV3;
 import com.romanpulov.violetnotecore.Service.PassData2WriterServiceV2;
 import com.romanpulov.violetnotecore.Service.PassData2WriterServiceV3;
-import com.romanpulov.violetnotecore.TestConfiguration;
-import com.romanpulov.violetnotecore.TestPassData2Generator;
-import com.romanpulov.violetnotecore.TestPassDataTools;
-import com.romanpulov.violetnotecore.TestUtils;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -28,7 +25,7 @@ public class TestFilePassDataPerformance {
     private static final int NUM_CATEGORIES = 30;
     private static final int NUM_NOTES = 120;
 
-    PassData passData = TestPassDataTools.generateTestPassData(NUM_CATEGORIES, NUM_NOTES);
+    PassData passData = TestPassDataGenerator.generateTestPassData(NUM_CATEGORIES, NUM_NOTES);
     PassData2 passData2 = TestPassData2Generator.generateTestPassData2(NUM_CATEGORIES, NUM_NOTES);
 
     private void printExecutionTime(String caption, long startTime, long endTime) {
@@ -127,7 +124,7 @@ public class TestFilePassDataPerformance {
 
             startTime = System.nanoTime();
 
-            String passDataEquals = TestPassDataTools.passDataEquals(passData2, readPassData2);
+            String passDataEquals = TestPassData2Tools.passDataEquals(passData2, readPassData2);
             if (passDataEquals != null) {
                 fail(passDataEquals);
             }
@@ -169,7 +166,7 @@ public class TestFilePassDataPerformance {
 
             startTime = System.nanoTime();
 
-            String passDataEquals = TestPassDataTools.passDataEquals(passData2, readPassData2);
+            String passDataEquals = TestPassData2Tools.passDataEquals(passData2, readPassData2);
             if (passDataEquals != null) {
                 fail(passDataEquals);
             }
@@ -229,7 +226,7 @@ public class TestFilePassDataPerformance {
             try (InputStream inputStream = new FileInputStream(TEST_FILE_NAME_1)) {
                 FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(inputStream, TEST_PASSWORD);
                 PassData passData = readerV1.readFile();
-                passData2 = PassData2Converter.from(passData);
+                passData2 = PassData2ConverterService.from(passData);
             }
         }
 
@@ -255,7 +252,7 @@ public class TestFilePassDataPerformance {
 
                     FilePassDataReaderV1 readerV1 = new FilePassDataReaderV1(bufferedInputStream, TEST_PASSWORD);
                     PassData passData = readerV1.readFile();
-                    passData2 = PassData2Converter.from(passData);
+                    passData2 = PassData2ConverterService.from(passData);
 
                     assertNotNull(passData2);
                 }
@@ -290,7 +287,7 @@ public class TestFilePassDataPerformance {
             assertEquals(NUM_CATEGORIES, readPassData2.getCategoryList().size());
             assertEquals(NUM_NOTES, readPassData2.getCategoryList().get(0).getNoteList().size());
 
-            String passDataEquals = TestPassDataTools.passDataEquals(passData2, readPassData2);
+            String passDataEquals = TestPassData2Tools.passDataEquals(passData2, readPassData2);
             if (passDataEquals != null) {
                 fail(passDataEquals);
             }

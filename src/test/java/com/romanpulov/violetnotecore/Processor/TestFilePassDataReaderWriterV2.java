@@ -49,7 +49,7 @@ public class TestFilePassDataReaderWriterV2 {
             PassData2 readPassData = reader.readFile();
             PassData2 passData = TestPassData2Generator.generateTestPassData2();
 
-            String passDataComparison = TestPassDataTools.passDataEquals(passData, readPassData);
+            String passDataComparison = TestPassData2Tools.passDataEquals(passData, readPassData);
             if (passDataComparison != null) {
                 fail(passDataComparison);
             }

@@ -9,7 +9,7 @@ import com.romanpulov.violetnotecore.Processor.FilePassDataWriterV3;
 import com.romanpulov.violetnotecore.Processor.TestFilePassDataWriter;
 import com.romanpulov.violetnotecore.TestConfiguration;
 import com.romanpulov.violetnotecore.TestPassData2Generator;
-import com.romanpulov.violetnotecore.TestPassDataTools;
+import com.romanpulov.violetnotecore.TestPassData2Tools;
 import com.romanpulov.violetnotecore.TestUtils;
 import org.junit.jupiter.api.*;
 
@@ -68,7 +68,7 @@ public class TestPassData2ReaderWriterServiceV3 {
             assertEquals("Alias", a2.name());
             assertEquals("Navy", a2.value());
 
-            String equalityCheck = TestPassDataTools.passDataEquals(passData2, passData2);
+            String equalityCheck = TestPassData2Tools.passDataEquals(passData2, passData2);
             if (equalityCheck != null) {
                 fail(equalityCheck);
             }

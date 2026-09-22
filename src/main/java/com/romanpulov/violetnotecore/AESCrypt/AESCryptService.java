@@ -1,13 +1,10 @@
 package com.romanpulov.violetnotecore.AESCrypt;
 
-import com.romanpulov.violetnotecore.Utils.HexConverter;
-
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;

@@ -2,7 +2,7 @@ package com.romanpulov.violetnotecore.Processor;
 
 import com.romanpulov.violetnotecore.Model.PassData;
 import com.romanpulov.violetnotecore.TestConfiguration;
-import com.romanpulov.violetnotecore.TestPassDataTools;
+import com.romanpulov.violetnotecore.TestPassDataGenerator;
 import com.romanpulov.violetnotecore.TestUtils;
 import org.junit.jupiter.api.*;
 
@@ -26,7 +26,7 @@ public class TestFilePassDataReaderWriterV1 {
         TestUtils.deleteFileIfExists(TEST_FILE_NAME);
 
         OutputStream outputStream = new FileOutputStream(TEST_FILE_NAME);
-        PassData passData = TestPassDataTools.generateTestPassData();
+        PassData passData = TestPassDataGenerator.generateTestPassData();
         FilePassDataWriterV1 writerV1 = new FilePassDataWriterV1(outputStream, TEST_PASSWORD, passData);
 
         (new TestFilePassDataWriter(writerV1, TEST_FILE_NAME)).testWriteFile();
